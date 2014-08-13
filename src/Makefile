@@ -1,11 +1,11 @@
 COMPILER = clang++
-OPTIONS = -std=c++0x
+OPTIONS = -std=c++0x -g -Wall
 
 LINK_TARGET = bin/jpoker.exe
 
 OBJS =  \
+ card.o \
  table.o \
- gamestate.o \
  poker.o \
  main.o
 
@@ -15,21 +15,15 @@ all : $(LINK_TARGET)
 	echo "done!"
 
 $(LINK_TARGET) : $(OBJS)
-	$(COMPILER) $(OPTIONS) -g -o $@ $^
+	$(COMPILER) $(OPTIONS) -o $@ $^
 
 %.o : %.cpp
-	$(COMPILER) $(OPTIONS) -g -o $@ -c $<
+	$(COMPILER) $(OPTIONS) -o $@ -c $<
 
 poker.h: enums.h
 card.o: card.h
 player.o : player.h
-table.o : table.h
-poker.o : poker.h | gamestate.o
-
-
-:clean
-	rm *.o
-
-
+table.o : table.h | card.o
+poker.o : poker.h
 
 

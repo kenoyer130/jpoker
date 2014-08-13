@@ -8,13 +8,19 @@ void Poker::startGame(Table* table) {
 
 	gameState = GameState::GameStart;
 
-	while(gameState!=GameState::GameStart) {
+	std::cout << "Starting Game! Good luck!\n";
+	
+	while(gameState!=GameState::GameEnd) {
 		switch(gameState){
 		case GameState::GameStart:
 			table->shuffleDeck();
 
-			gameState= GameState::GameStart;
+			gameState= GameState::GameEnd;
+			break;
+		case GameState::GameEnd:
 			break;
 		}
 	}
+
+    std::cout << "Game Over!\n";
 }

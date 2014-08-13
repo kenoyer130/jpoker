@@ -1,8 +1,11 @@
-#ifndef GameState_H
-#define GameState_H
+#ifndef Enums_H
+#define Enums_H
+
+#include <string>
 
 enum class GameState {
-	 GameStart
+	GameStart,
+	GameEnd
 };
 
 enum class Suite {
@@ -12,6 +15,7 @@ enum class Suite {
 		DIAMOND=3
 		};
 
-#endif
+static const char SuiteStrings[] = { 'H', 'S', 'C', 'D' };	
 
+#endif
 

@@ -4,9 +4,11 @@
 void Table::shuffleDeck() {
 	deck.clear();
 
-	for(int i = 0; i<4;i++) {
+	std::cout << "shuffling deck!\n";
+	
+	for(int i = 0; i < 4;i++) {
 		
-		for(int c=0;c<13;c++) {
+		for(int c = 0;c<14;c++) {
 			Card card;
 			card.suite = static_cast<Suite>(i);
 			card.number = c;
@@ -16,6 +18,6 @@ void Table::shuffleDeck() {
 	}
 
 	for(Card card:deck){
-		std::cout << card.number << static_cast<int>(card.suite) << "\n";
+		std::cout << card.ToString() << "\n";
 	}
 }
