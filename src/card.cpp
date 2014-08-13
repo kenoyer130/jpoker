@@ -6,20 +6,20 @@ std::string Card::ToString() {
 
 	std::string value;
 	
-	if(number>10) {
-		value += std::to_string(number);
+	if(number<10) {
+		value += std::to_string(number + 1);
 	} else {
 		switch(number){
-		case 11:
+		case 10:
 			value += "J";
 			break;
-		case 12:
+		case 11:
 			value += "Q";
 			break;
-       case 13:
+       case 12:
 			value += "K";
 			break;
-		case 14:
+		case 13:
 			value += "A";
 		}
 	}
