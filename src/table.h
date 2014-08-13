@@ -16,6 +16,9 @@ public:
 	std::vector<Player> players;
 
 	void shuffleDeck();
+
+private:
+	void seedDeck();
 };
 
 #endif
