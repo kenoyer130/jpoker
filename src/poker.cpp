@@ -6,17 +6,23 @@
 
 void Poker::startGame(Table* table) {
 
-	gameState = GameState::GameStart;
+	gameState = GameState::HandStart;
 
 	std::cout << "Starting Game! Good luck!\n";
 	
 	while(gameState!=GameState::GameEnd) {
 		switch(gameState){
-		case GameState::GameStart:
-			table->shuffleDeck();
 
+		case GameState::HandStart:
+
+			table->ShuffleDeck();
+			table->DealHoleCards();
+
+			std::cout << "Your hole cards: " << table->You->HoleCards[0].ToString() << " " << table->You->HoleCards[1].ToString() << "\n\n";
+			
 			gameState= GameState::GameEnd;
 			break;
+
 		case GameState::GameEnd:
 			break;
 		}

@@ -4,7 +4,7 @@
 #include <string>
 
 enum class GameState {
-	GameStart,
+	HandStart,
 	GameEnd
 };
 

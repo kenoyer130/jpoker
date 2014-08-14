@@ -7,15 +7,25 @@
 
 class Table {
 public:
-	double pot;
-	double blind;
-	std::vector<Card> deck;
+	double Pot;
+	double SmallBlind;
+	double BigBlind;
 
-	Player* dealer;
+	std::vector<Card> Deck;
+
+	Player* You;
 	
-	std::vector<Player> players;
+	std::vector<Player> Players;
 
-	void shuffleDeck();
+	int NumberOfPlayers();
+
+	void ShuffleDeck();
+
+	void AddPlayer(Player player);
+
+	void DealCard();
+	
+	void DealHoleCards();
 
 private:
 	void seedDeck();
