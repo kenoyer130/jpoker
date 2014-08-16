@@ -38,6 +38,8 @@ void clearBlinds();
 
 bool areEqual(const Player& a, const Player& b);
 
+int ante(int smallBlind, int bigBlind);
+
 // removes player
 void remove(Player& player);
 

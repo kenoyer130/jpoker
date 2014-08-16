@@ -8,7 +8,10 @@ Poker::Poker() {
 	// load config
 	Configurator configurator;
 	Configuration config = configurator.Get();
-
+	
+	this->bigBlind = config.BigBlind;
+	this->smallBlind = config.SmallBlind;
+	
 	// set players
 	auto players = std::unique_ptr<Players>(new Players(config));
 	this->players = std::move(players);
@@ -28,9 +31,10 @@ void Poker::StartGame() {
 		switch(gameState){
 
 		case GameState::HandStart:
-			table->Pot = 0;
-			printState();
+			clearPlayers();
 			this->players->nextDealer();
+			table->Pot += this->players->ante(this->bigBlind, this->smallBlind);
+			printState();
 			startHand();
 			break;
 
@@ -40,6 +44,12 @@ void Poker::StartGame() {
 	}
 
     std::cout << "Game Over!\n";
+}
+
+void Poker::clearPlayers(){
+	for(int i = 0;i < this->players->items.size(); i++){
+		this->players->items[i]->BetAmount = 0;
+	}
 }
 
 void Poker::dealHoleCards() {
@@ -63,6 +73,8 @@ void Poker::printState() {
 		std::cout << "Player: " <<  this->players->items[i]->Name << "\t\t";
 
 		std::cout <<  this->players->items[i]->Chips << "\t";
+
+		std::cout <<  this->players->items[i]->BetAmount << "\t";
 		
 		if(this->players->items[i]->Dealer){
 			std::cout << "Dealer ";

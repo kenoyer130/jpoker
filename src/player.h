@@ -17,8 +17,14 @@ public:
 	
     std::string Name;
 	unsigned int Chips;
-
+	
 	Card HoleCard[2];
+
+	int BetAmount;
+
+	// subtracts the bet and sets the bet amount.
+	// if the bet is more then chips then returns all chips
+	int bet(int amount);
 };
 
 #endif

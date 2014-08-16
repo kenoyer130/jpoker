@@ -27,8 +27,7 @@ Players::Players(Configuration config) {
 	}
 
 	// set dealer
-	std::default_random_engine generator((unsigned int)time(0));
-
+	std::default_random_engine generator(std::random_device{}());
 	std::uniform_int_distribution<int> distribution(0, this->items.size()-1);
 	int startingDealer = distribution(generator);
 
@@ -39,7 +38,7 @@ Players::Players(Configuration config) {
 
 // returns a reference to the player that is you!
 Player& Players::You() {
-	for(int i = 0; i < this->items.size() -1; i++) {
+	for(int i = 0; i < this->items.size(); i++) {
 		if(!this->items[i]-> AI) return *this->items[i].get();
 	}
 
@@ -47,7 +46,7 @@ Player& Players::You() {
 }
 
 Player& Players::Dealer() {
-	for(int i = 0; i < this->items.size() -1; i++) {
+	for(int i = 0; i < this->items.size(); i++) {
 		if(this->items[i]-> Dealer) return *this->items[i].get();
 	}
 
@@ -61,7 +60,7 @@ void Players::clearDealer() {
 }
 
 void Players::clearBlinds() {
-	for(int i = 0; i < this->items.size() -1; i++) {
+	for(int i = 0; i < this->items.size(); i++) {
 		this->items[i]->SmallBlind = false;
 		this->items[i]->BigBlind = false;
 	}
@@ -69,7 +68,7 @@ void Players::clearBlinds() {
 
 
 Player& Players::BigBlind() {
-	for(int i = 0; i < this->items.size() -1; i++) {
+	for(int i = 0; i < this->items.size(); i++) {
 		if(this->items[i]-> BigBlind) return *this->items[i].get();
 	}
 
@@ -77,7 +76,7 @@ Player& Players::BigBlind() {
 }	
 
 Player& Players::SmallBlind() {
-	for(int i = 0; i < this->items.size() -1; i++) {
+	for(int i = 0; i < this->items.size(); i++) {
 		if(this->items[i]-> SmallBlind) return *this->items[i].get();
 	}
 
@@ -98,15 +97,25 @@ void Players::nextDealer() {
 	nextDealer.Dealer=true;
 	
 	// set the blinds
-	next(nextDealer).BigBlind=true;
+	next(oldDealer).BigBlind=true;
 	next(this->BigBlind()).SmallBlind=true;
+}
+
+int Players::ante(int bigBlind, int smallBlind) {
+	Player& big = this->BigBlind();
+	Player& small = this->SmallBlind();
+
+	int bigbet = big.bet(bigBlind);
+	int smallbet = small.bet(smallBlind);
+
+	return bigbet + smallbet;
 }
 
 // Returns the next player to the left of indicated player.
 // handles wrapping.
 Player& Players::next(const Player& player) {
    // find matching player
-	for(int i=0;i<this->items.size() -1; i++) {
+	for(int i=0;i<this->items.size(); i++) {
 		
 		if(player.Name==this->items[i]->Name) {
 			// once found get the next entry or the first entry if at end

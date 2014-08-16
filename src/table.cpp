@@ -25,11 +25,6 @@ void Table::ShuffleDeck() {
 		Deck[j] = Deck[i];
 		Deck[i] = temp;
 	} 
-
-	// debug output of the deck
-	// for(Card card:Deck) {
-    // 	std::cout << card.ToString() << "\n";
-	// }
 }
 
 // deals one card off the top of the deck
@@ -52,4 +47,8 @@ void Table::seedDeck() {
 			Deck.push_back(card);
 		}
 	}
+
+	//for(Card card:Deck) {
+	//	std::cout << card.ToString() << "\n";
+	// }
 }

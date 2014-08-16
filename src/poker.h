@@ -14,7 +14,11 @@ private:
 	std::unique_ptr<Players> players;
 
 	GameState gameState;
-	
+
+	int bigBlind;
+	int smallBlind;
+
+	void clearPlayers();
 	void printState();
 	void startHand();
 	void dealHoleCards();
