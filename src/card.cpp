@@ -2,6 +2,15 @@
 
 #include "card.h"
 
+Card::Card() {
+	
+}
+
+Card::Card(int number, Suite suite) {
+	this->number = number;
+	this->suite = suite;
+}
+
 std::string Card::ToString() {
 
 	std::string value;
@@ -11,16 +20,16 @@ std::string Card::ToString() {
 	} else {
 		switch(number){
 		case 10:
-			value += "J";
+			value += "Jack";
 			break;
 		case 11:
-			value += "Q";
+			value += "Queen";
 			break;
        case 12:
-			value += "K";
+			value += "King";
 			break;
 		case 13:
-			value += "A";
+			value += "Ace";
 		}
 	}
 

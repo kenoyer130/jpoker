@@ -12,18 +12,18 @@ public:
 	double BigBlind;
 
 	std::vector<Card> Deck;
-
-	Player* You;
 	
 	std::vector<Player> Players;
 
 	int NumberOfPlayers();
 
+	Player You();
+
 	void ShuffleDeck();
 
 	void AddPlayer(Player player);
 
-	void DealCard();
+	Card DealCard();
 	
 	void DealHoleCards();
 

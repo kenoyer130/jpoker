@@ -2,16 +2,19 @@
 #define Player_H
 
 #include <string>
+#include <vector>
 
 #include "card.h"
 
 class Player {
 public:
+
+	bool AI;
 	
-	std::string Name;
+    std::string Name;
 	unsigned int Chips;
 
-	Card HoleCards [2];
+	Card HoleCard[2];
 };
 
 #endif

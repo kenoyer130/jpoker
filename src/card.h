@@ -11,6 +11,9 @@ public:
     int number;
 	Suite suite;
 
+	Card();
+	Card(int number, Suite suite);
+	
 	std::string ToString();
 };
 

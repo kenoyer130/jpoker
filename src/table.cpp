@@ -6,6 +6,14 @@ void Table::AddPlayer(Player player){
 	Players.push_back(player);
 }
 
+Player Table::You() {
+	for(Player player: this->Players) {
+		if(player.AI == false) {
+			return player;
+		}
+	}
+}
+
 void Table::ShuffleDeck() {
 
 	std::cout << "shuffling deck!\n";
@@ -32,15 +40,16 @@ void Table::ShuffleDeck() {
 void Table::DealHoleCards() {
 
 	for(int i = 0;i < NumberOfPlayers(); i++){
-		Players[i].HoleCards[0](DealCard());
-		Players[i].HoleCards[1](DealCard());
+		
+		Players[i].HoleCard[0] = DealCard();
+		Players[i].HoleCard[1] = DealCard();
 	}
 
 	std::cout << "Starting cards dealt!\n";
 }
 
 Card Table::DealCard() {
-	Card card = Deck.front;
+	Card card = Deck.front();
 	Deck.pop_back();
 	return card;
 }
@@ -54,7 +63,7 @@ void Table::seedDeck() {
 	
 	for(int i = 0; i < 4;i++) {
 		
-		for(int c = 0;c<14;c++) {
+		for(int c = 0;c < 14;c++) {
 			Card card;
 			card.suite = static_cast<Suite>(i);
 			card.number = c;

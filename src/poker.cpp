@@ -18,7 +18,7 @@ void Poker::startGame(Table* table) {
 			table->ShuffleDeck();
 			table->DealHoleCards();
 
-			std::cout << "Your hole cards: " << table->You->HoleCards[0].ToString() << " " << table->You->HoleCards[1].ToString() << "\n\n";
+			std::cout << "Your hole cards: " << table->You().HoleCard[0].ToString() << " " << table->You().HoleCard[1].ToString() << "\n\n";
 			
 			gameState= GameState::GameEnd;
 			break;
