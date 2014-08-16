@@ -4,7 +4,21 @@
 #include "poker.h"
 #include "table.h"
 
-void Poker::startGame(Table* table) {
+Poker::Poker() {
+	// load config
+	Configurator configurator;
+	Configuration config = configurator.Get();
+
+	// set players
+	auto players = std::unique_ptr<Players>(new Players(config));
+	this->players = std::move(players);
+
+	// set table
+	auto table = std::unique_ptr<Table>(new Table(config));
+	this->table = std::move(table);
+}
+
+void Poker::StartGame() {
 
 	gameState = GameState::HandStart;
 
@@ -14,13 +28,10 @@ void Poker::startGame(Table* table) {
 		switch(gameState){
 
 		case GameState::HandStart:
-
-			table->ShuffleDeck();
-			table->DealHoleCards();
-
-			std::cout << "Your hole cards: " << table->You().HoleCard[0].ToString() << " " << table->You().HoleCard[1].ToString() << "\n\n";
-			
-			gameState= GameState::GameEnd;
+			table->Pot = 0;
+			printState();
+			this->players->nextDealer();
+			startHand();
 			break;
 
 		case GameState::GameEnd:
@@ -29,4 +40,56 @@ void Poker::startGame(Table* table) {
 	}
 
     std::cout << "Game Over!\n";
+}
+
+void Poker::dealHoleCards() {
+
+	for(int i = 0;i < this->players->items.size(); i++){
+		this->players->items[i]->HoleCard[0] = table->DealCard();
+		this->players->items[i]->HoleCard[1] = table->DealCard();
+	}
+
+	std::cout << "Starting cards dealt!\n";
+}
+
+
+void Poker::printState() {
+
+	std::cout << "\n";
+	std::cout << "Pot: " << this->table->Pot << "\n";
+	std::cout << "\n";
+	
+	for(int i = 0; i <  this->players->items.size(); i++) {
+		std::cout << "Player: " <<  this->players->items[i]->Name << "\t\t";
+
+		std::cout <<  this->players->items[i]->Chips << "\t";
+		
+		if(this->players->items[i]->Dealer){
+			std::cout << "Dealer ";
+		}
+
+		if(this->players->items[i]->BigBlind){
+			std::cout << "BigBlind ";
+		}
+
+		if(this->players->items[i]->SmallBlind){
+			std::cout << "LittleBlind ";
+		}
+		
+		std::cout << "\n";
+	}
+
+	std::cout << "\n";
+}
+
+void Poker::startHand() {
+
+	table->ShuffleDeck();
+
+	dealHoleCards();
+			
+	std::cout << "Your hole cards: " <<  this->players->You().HoleCard[0].ToString() << " ";
+	std::cout <<  this->players->You().HoleCard[1].ToString() << "\n\n";
+			
+	gameState = GameState::GameEnd;
 }

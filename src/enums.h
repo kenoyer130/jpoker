@@ -15,7 +15,7 @@ enum class Suite {
 		DIAMOND=3
 		};
 
-static const char SuiteStrings[] = { 'H', 'S', 'C', 'D' };	
+static const std::string SuiteStrings[] = { "Hearts", "Spades", "Clubs", "Diamonds" };	
 
 #endif
 

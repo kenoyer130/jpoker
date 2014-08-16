@@ -5,12 +5,6 @@
 #include "configurator.h"
 
 int main() {
-
-	Table table;
-
-	Configurator config;
-	config.Load(&table);
-	
 	Poker poker;
-	poker.startGame(&table);
+	poker.StartGame();
 }

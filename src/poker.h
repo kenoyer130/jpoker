@@ -6,8 +6,18 @@
 
 class Poker {
 public:
-	void startGame(Table* table);
+	Poker();
+	void StartGame();
+
+private:
+	std::unique_ptr<Table> table;
+	std::unique_ptr<Players> players;
+
 	GameState gameState;
+	
+	void printState();
+	void startHand();
+	void dealHoleCards();
 };
 
 #endif

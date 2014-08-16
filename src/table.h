@@ -1,33 +1,30 @@
 #ifndef Table_H
 #define Table_H
 
-#include<vector>
+#include <vector>
+#include <memory>
 
 #include "player.h"
+#include "players.h"
+#include "configurator.h"
 
 class Table {
 public:
-	double Pot;
-	double SmallBlind;
-	double BigBlind;
 
+	double Pot;
+	
 	std::vector<Card> Deck;
 	
-	std::vector<Player> Players;
-
-	int NumberOfPlayers();
-
-	Player You();
+	Table(Configuration config);
 
 	void ShuffleDeck();
-
-	void AddPlayer(Player player);
 
 	Card DealCard();
 	
 	void DealHoleCards();
 
 private:
+	Configuration config;
 	void seedDeck();
 };
 

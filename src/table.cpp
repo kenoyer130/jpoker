@@ -1,17 +1,11 @@
 #include <iostream>
+#include <assert.h>
+
 #include <random>
 #include "table.h"
 
-void Table::AddPlayer(Player player){
-	Players.push_back(player);
-}
-
-Player Table::You() {
-	for(Player player: this->Players) {
-		if(player.AI == false) {
-			return player;
-		}
-	}
+Table::Table(Configuration config) {
+	this->config = config;
 }
 
 void Table::ShuffleDeck() {
@@ -31,31 +25,18 @@ void Table::ShuffleDeck() {
 		Deck[j] = Deck[i];
 		Deck[i] = temp;
 	} 
-	
-	for(Card card:Deck) {
-		std::cout << card.ToString() << "\n";
-	}
+
+	// debug output of the deck
+	// for(Card card:Deck) {
+    // 	std::cout << card.ToString() << "\n";
+	// }
 }
 
-void Table::DealHoleCards() {
-
-	for(int i = 0;i < NumberOfPlayers(); i++){
-		
-		Players[i].HoleCard[0] = DealCard();
-		Players[i].HoleCard[1] = DealCard();
-	}
-
-	std::cout << "Starting cards dealt!\n";
-}
-
+// deals one card off the top of the deck
 Card Table::DealCard() {
-	Card card = Deck.front();
+	Card card = Deck.back();
 	Deck.pop_back();
 	return card;
-}
-
-int Table::NumberOfPlayers(){
-	return Players.size();
 }
 
 void Table::seedDeck() {
@@ -63,7 +44,7 @@ void Table::seedDeck() {
 	
 	for(int i = 0; i < 4;i++) {
 		
-		for(int c = 0;c < 14;c++) {
+		for(int c = 0;c < 13;c++) {
 			Card card;
 			card.suite = static_cast<Suite>(i);
 			card.number = c;

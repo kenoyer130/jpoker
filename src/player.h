@@ -10,6 +10,10 @@ class Player {
 public:
 
 	bool AI;
+
+	bool Dealer;
+	bool BigBlind;
+	bool SmallBlind;
 	
     std::string Name;
 	unsigned int Chips;
