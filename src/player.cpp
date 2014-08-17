@@ -12,3 +12,4 @@ int Player::bet(int amount) {
 	this->BetAmount += amount;
 	return amount;
 }
+

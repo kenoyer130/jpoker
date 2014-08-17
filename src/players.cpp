@@ -111,7 +111,7 @@ int Players::ante(int bigBlind, int smallBlind) {
 // Returns the next player to the left of indicated player.
 // handles wrapping.
 Player& Players::next(const Player& player) {
-   // find matching player
+	// find matching player
 	for(int i=0;i<this->items.size(); i++) {
 		
 		if(player.Name==this->items[i]->Name) {
@@ -125,6 +125,33 @@ Player& Players::next(const Player& player) {
 	}
 
 	assert(0);
+}
+
+// figures out the players position in relation to the dealer.
+// return -  0 if under the gun etc. higher is better.
+int Players::getPosition(const Player& player) {
+
+    // if dealer return the max number of players minus one
+	if(this->Dealer().Name == player.Name) {
+		return this->items.size()-1;
+	}
+	
+	// walk through and find out how far we are from the dealer.
+	int position;
+	bool found;
+
+	Player& current = this->next(this->Dealer());
+	
+	while(!found) {
+		if(current.Name==player.Name){
+			found = true;
+		} else {
+			position++;
+			current = this->next(current);
+		}
+	}
+		
+	return position;
 }
 
 // removes player

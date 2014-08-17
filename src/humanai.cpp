@@ -1,8 +1,11 @@
 #include "humanai.h"
 
-ActionTaken HumanAI::getAction(int pot, int currentbet, int position, std::vector<Card> cards) {
+ActionTaken HumanAI::getAction(int pot, int currentbet, int position, Card HoleCard[], std::vector<Card> cards) {
 
 	// output current state
+	std::cout << "Hole cards: " <<  HoleCard[0].ToString() << " ";
+	std::cout <<  HoleCard[1].ToString() << "\n\n";
+	
 	std::cout << "pot: " << pot << " current bet:" << currentbet << " position:" << position << "\n";
 
 	for(Card card : cards) {
@@ -15,9 +18,11 @@ ActionTaken HumanAI::getAction(int pot, int currentbet, int position, std::vecto
 	bool valid;
 	char input;
 
+	std::cout << "You can either [F]old, [C]all, or [R]aise:";
+	
 	while(!valid) {
-		std::cout << "You can either [F]old, [C]all, or [R]aise:";
-		input = getchar();
+	
+		input = std::cin.get();
 		
 		if(input=='f' || input=='c' || input=='r') {
 			valid=true;

@@ -1,6 +1,6 @@
 #include "stockai.h"
 
-ActionTaken StockAI::getAction(int pot, int currentbet, int position, std::vector<Card> cards) {
+ActionTaken StockAI::getAction(int pot, int currentbet, int position, Card HoleCard[], std::vector<Card> cards) {
 	
 	ActionTaken result;
 
@@ -10,3 +10,6 @@ ActionTaken StockAI::getAction(int pot, int currentbet, int position, std::vecto
 
 	return result;
 }
+
+
+

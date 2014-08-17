@@ -23,9 +23,6 @@ Player& SmallBlind();
 // constructor
 Players(Configuration config);
 
-// returns the player that is you.
-Player& You();
-
 Player& next(const Player& player);
 
 // moves the dealer button to the next player on the left
@@ -36,14 +33,15 @@ void clearDealer();
 
 void clearBlinds();
 
-bool areEqual(const Player& a, const Player& b);
+int ante(int bigBlind, int smallBlind);
 
-int ante(int smallBlind, int bigBlind);
+int getPosition(const Player& player);
 
 // removes player
 void remove(Player& player);
 
 std::vector<std::unique_ptr<Player>> items;
+
 
 };
 

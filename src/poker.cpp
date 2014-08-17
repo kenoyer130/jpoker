@@ -36,11 +36,14 @@ void Poker::StartGame() {
 			table->Pot += this->players->ante(this->bigBlind, this->smallBlind);
 			printState();
 			startHand();
+			gameState =  GameState::PreFlop;
 			break;
+			
 		case GameState::PreFlop:
 			takeActions();
 			gameState = GameState::GameEnd;
 			break;
+			
 	  	case GameState::GameEnd:
 			break;
 		}
@@ -94,9 +97,6 @@ void Poker::printState() {
 		
 		std::cout << "\n";
 	}
-				
-	std::cout << "Your hole cards: " <<  this->players->You().HoleCard[0].ToString() << " ";
-	std::cout <<  this->players->You().HoleCard[1].ToString() << "\n\n";
 }
 
 void Poker::startHand() {
@@ -109,27 +109,31 @@ void Poker::startHand() {
 void Poker::takeActions() {
 	for(int i = 0;i < this->players->items.size(); i++){
 
- 		auto player = this->players->items[i];
+ 		Player& player = *this->players->items[i].get();
 		
-		if(player->Folded) {
+		if(player.Folded) {
 			continue;
 		}
+		
+		// todo: returns max int?
+		int position = this->players->getPosition(player);
 
-		auto actionTaken = player->AI->getAction(this->table->Pot, this->currentbet, position, cards);
+		auto actionTaken = player.AI->getAction(this->table->Pot, this->currentbet, position, player.HoleCard, cards);
 
 		switch(actionTaken.action) {
 			
-		  case(ActionTaken::Raise) {
-		 	this->table->pot += actionTaken.amount;
+		case(Action::Raise):
+		 	this->table->Pot += actionTaken.amount;
 			this->currentbet += actionTaken.amount;
-			player->Chips -= ActionTaken.amount;
-			
+			player.Chips -= actionTaken.amount;
 			break;
-		  }
-		case(ActionTaken::Fold){
-			player->Folded = true;
+		  
+		case(Action::Fold):
+			player.Folded = true;
 			break;
-		  }
+
+		case(Action::Call):
+			break;
 		}
 	}
 }

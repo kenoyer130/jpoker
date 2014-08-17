@@ -33,7 +33,7 @@ player.o: player.h
 players.o: players.h
 card.o: card.h
 player.o : player.h
-table.o : table.h | card.o
+table.o : table.h
 poker.o : poker.h
 
 
