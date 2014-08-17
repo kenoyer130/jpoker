@@ -2,6 +2,8 @@
 
 #include "configurator.h"
 #include "players.h"
+#include "humanai.h"
+#include "stockai.h"
 
 // constructor
 Players::Players(Configuration config) {
@@ -11,7 +13,9 @@ Players::Players(Configuration config) {
 
 	human->Chips = config.StartingChips;
 	human->Name = "You";
-	human->AI = false;
+
+	std::unique_ptr<HumanAI> human_ai(new HumanAI());
+	human->AI = std::move(human_ai);
 	
 	this->items.push_back(std::move(human));
 
@@ -21,8 +25,10 @@ Players::Players(Configuration config) {
 		std::unique_ptr<Player> player(new Player());
 		player->Chips = config.StartingChips;
 		player->Name = config.PlayerNames[i];
-		player->AI = true;
-		
+
+		std::unique_ptr<StockAI> stock_ai(new StockAI());
+		player->AI = std::move(stock_ai);
+	
 		this->items.push_back(std::move(player));
 	}
 
@@ -34,15 +40,6 @@ Players::Players(Configuration config) {
 	// we set the dealer then iterator one to also properly seed the big and small blinds.
 	this->items[startingDealer]->Dealer = true;
 	nextDealer();
-}
-
-// returns a reference to the player that is you!
-Player& Players::You() {
-	for(int i = 0; i < this->items.size(); i++) {
-		if(!this->items[i]-> AI) return *this->items[i].get();
-	}
-
-	assert(0);
 }
 
 Player& Players::Dealer() {

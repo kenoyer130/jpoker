@@ -1,7 +1,7 @@
 #include "player.h"
 
 int Player::bet(int amount) {
-	if(this->Chips - amount < 0) {
+	if(this->Chips - amount == 0) {
 		int actualBet = this->Chips;
 		this->Chips = 0;
 		this->BetAmount += actualBet;

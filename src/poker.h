@@ -13,12 +13,16 @@ private:
 	std::unique_ptr<Table> table;
 	std::unique_ptr<Players> players;
 
+    std::vector<Card> cards;
+	int currentbet;
+	
 	GameState gameState;
 
 	int bigBlind;
 	int smallBlind;
 
-	void clearPlayers();
+	void resetPlayers();
+	void takeActions();
 	void printState();
 	void startHand();
 	void dealHoleCards();

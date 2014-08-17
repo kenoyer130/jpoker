@@ -31,14 +31,17 @@ void Poker::StartGame() {
 		switch(gameState){
 
 		case GameState::HandStart:
-			clearPlayers();
+			resetPlayers();
 			this->players->nextDealer();
 			table->Pot += this->players->ante(this->bigBlind, this->smallBlind);
 			printState();
 			startHand();
 			break;
-
-		case GameState::GameEnd:
+		case GameState::PreFlop:
+			takeActions();
+			gameState = GameState::GameEnd;
+			break;
+	  	case GameState::GameEnd:
 			break;
 		}
 	}
@@ -46,9 +49,10 @@ void Poker::StartGame() {
     std::cout << "Game Over!\n";
 }
 
-void Poker::clearPlayers(){
+void Poker::resetPlayers(){
 	for(int i = 0;i < this->players->items.size(); i++){
 		this->players->items[i]->BetAmount = 0;
+		this->players->items[i]->Folded = false;
 	}
 }
 
@@ -90,8 +94,9 @@ void Poker::printState() {
 		
 		std::cout << "\n";
 	}
-
-	std::cout << "\n";
+				
+	std::cout << "Your hole cards: " <<  this->players->You().HoleCard[0].ToString() << " ";
+	std::cout <<  this->players->You().HoleCard[1].ToString() << "\n\n";
 }
 
 void Poker::startHand() {
@@ -99,9 +104,32 @@ void Poker::startHand() {
 	table->ShuffleDeck();
 
 	dealHoleCards();
+}
+
+void Poker::takeActions() {
+	for(int i = 0;i < this->players->items.size(); i++){
+
+ 		auto player = this->players->items[i];
+		
+		if(player->Folded) {
+			continue;
+		}
+
+		auto actionTaken = player->AI->getAction(this->table->Pot, this->currentbet, position, cards);
+
+		switch(actionTaken.action) {
 			
-	std::cout << "Your hole cards: " <<  this->players->You().HoleCard[0].ToString() << " ";
-	std::cout <<  this->players->You().HoleCard[1].ToString() << "\n\n";
+		  case(ActionTaken::Raise) {
+		 	this->table->pot += actionTaken.amount;
+			this->currentbet += actionTaken.amount;
+			player->Chips -= ActionTaken.amount;
 			
-	gameState = GameState::GameEnd;
+			break;
+		  }
+		case(ActionTaken::Fold){
+			player->Folded = true;
+			break;
+		  }
+		}
+	}
 }

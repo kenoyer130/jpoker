@@ -5,6 +5,8 @@ LINK_TARGET = bin/jpoker.exe
 
 OBJS =  \
  configurator.o \
+ humanai.o \
+ stockai.o \
  card.o \
  player.o \
  players.o \
@@ -24,6 +26,8 @@ $(LINK_TARGET) : $(OBJS)
 	$(COMPILER) $(OPTIONS) -o $@ -c $<
 
 configurator.o : configurator.h
+humanai.o : humanai.h
+stockai.o : stockai.h
 poker.h: enums.h
 player.o: player.h
 players.o: players.h

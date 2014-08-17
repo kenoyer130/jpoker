@@ -3,17 +3,21 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "card.h"
+#include "ai.h"
 
 class Player {
 public:
 
-	bool AI;
+	std::unique_ptr<AI> AI;
 
 	bool Dealer;
 	bool BigBlind;
 	bool SmallBlind;
+
+	bool Folded;
 	
     std::string Name;
 	unsigned int Chips;
