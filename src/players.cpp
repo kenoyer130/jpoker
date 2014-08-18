@@ -90,12 +90,12 @@ void Players::nextDealer() {
 	this->clearBlinds();
 
 	// set next dealer
-	auto nextDealer = next(oldDealer);
+	Player& nextDealer = getNext(oldDealer);
 	nextDealer.Dealer=true;
 	
 	// set the blinds
-	next(oldDealer).BigBlind=true;
-	next(this->BigBlind()).SmallBlind=true;
+	getNext(nextDealer).SmallBlind=true;
+	getNext(this->SmallBlind()).BigBlind=true;
 }
 
 int Players::ante(int bigBlind, int smallBlind) {
@@ -108,18 +108,18 @@ int Players::ante(int bigBlind, int smallBlind) {
 	return bigbet + smallbet;
 }
 
-// Returns the next player to the left of indicated player.
-// handles wrapping.
-Player& Players::next(const Player& player) {
+// Returns an index of the player to the "left" of indicated player.
+// Handles wrapping so if the player is the last player will return 0;
+int Players::next(const Player& player) {
 	// find matching player
 	for(int i=0;i<this->items.size(); i++) {
 		
 		if(player.Name==this->items[i]->Name) {
 			// once found get the next entry or the first entry if at end
 			if(i!=this->items.size()-1) {
-				return *this->items[i+1].get();
+				return i+1;
 			} else {
-				return *this->items[0].get();
+				return 0;
 			}
 		}
 	}
@@ -127,31 +127,44 @@ Player& Players::next(const Player& player) {
 	assert(0);
 }
 
+// returns a reference to the player at the indicated index.
+Player& Players::get(int index) {
+	return *this->items[index].get();
+}
+
+// returns a reference to the next player from the provided player.
+// call this if you intend to modify the next player.
+Player& Players::getNext(const Player& player) {
+	int index = this->next(player);
+	return this->get(index);
+}
+
 // figures out the players position in relation to the dealer.
 // return -  0 if under the gun etc. higher is better.
-int Players::getPosition(const Player& player) {
+Position Players::getPosition(const Player& player) {
 
-    // if dealer return the max number of players minus one
+    // if dealer return special
 	if(this->Dealer().Name == player.Name) {
-		return this->items.size()-1;
+		return Position::Dealer;
 	}
 	
 	// walk through and find out how far we are from the dealer.
-	int position;
-	bool found;
+	int position(0);
+	bool found(false);
 
-	Player& current = this->next(this->Dealer());
+	int index = this->next(player);
 	
 	while(!found) {
+		Player& current = this->get(index);
 		if(current.Name==player.Name){
 			found = true;
 		} else {
 			position++;
-			current = this->next(current);
+			index = this->next(current);
 		}
 	}
 		
-	return position;
+	return static_cast<Position>(position);
 }
 
 // removes player

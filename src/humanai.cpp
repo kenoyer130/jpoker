@@ -1,12 +1,13 @@
 #include "humanai.h"
 
-ActionTaken HumanAI::getAction(int pot, int currentbet, int position, Card HoleCard[], std::vector<Card> cards) {
+ActionTaken HumanAI::getAction(int pot, int currentbet, Position position, Card HoleCard[], std::vector<Card> cards) {
 
 	// output current state
 	std::cout << "Hole cards: " <<  HoleCard[0].ToString() << " ";
 	std::cout <<  HoleCard[1].ToString() << "\n\n";
 	
-	std::cout << "pot: " << pot << " current bet:" << currentbet << " position:" << position << "\n";
+	std::cout << "pot: " << pot << " current bet:" << currentbet;
+	std::cout << " position:" << PositionStrings[static_cast<int>(position)] << "\n";
 
 	for(Card card : cards) {
 		std::cout << card.ToString() << " ";
@@ -48,3 +49,5 @@ ActionTaken HumanAI::getAction(int pot, int currentbet, int position, Card HoleC
 
 	return result;
 }
+
+

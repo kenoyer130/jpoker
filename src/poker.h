@@ -4,6 +4,8 @@
 #include "enums.h"
 #include "table.h"
 
+using namespace std;
+
 class Poker {
 public:
 	Poker();

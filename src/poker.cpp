@@ -13,19 +13,19 @@ Poker::Poker() {
 	this->smallBlind = config.SmallBlind;
 	
 	// set players
-	auto players = std::unique_ptr<Players>(new Players(config));
-	this->players = std::move(players);
+	auto players = unique_ptr<Players>(new Players(config));
+	this->players = move(players);
 
 	// set table
-	auto table = std::unique_ptr<Table>(new Table(config));
-	this->table = std::move(table);
+	auto table = unique_ptr<Table>(new Table(config));
+	this->table = move(table);
 }
 
 void Poker::StartGame() {
 
 	gameState = GameState::HandStart;
 
-	std::cout << "Starting Game! Good luck!\n";
+	cout << "Starting Game! Good luck!\n";
 	
 	while(gameState!=GameState::GameEnd) {
 		switch(gameState){
@@ -45,11 +45,10 @@ void Poker::StartGame() {
 			break;
 			
 	  	case GameState::GameEnd:
+			cout << "Game Over!\n";
 			break;
 		}
 	}
-
-    std::cout << "Game Over!\n";
 }
 
 void Poker::resetPlayers(){
@@ -66,36 +65,36 @@ void Poker::dealHoleCards() {
 		this->players->items[i]->HoleCard[1] = table->DealCard();
 	}
 
-	std::cout << "Starting cards dealt!\n";
+	cout << "Starting cards dealt!\n";
 }
 
 
 void Poker::printState() {
 
-	std::cout << "\n";
-	std::cout << "Pot: " << this->table->Pot << "\n";
-	std::cout << "\n";
+	cout << "\n";
+	cout << "Pot: " << this->table->Pot << "\n";
+	cout << "\n";
 	
 	for(int i = 0; i <  this->players->items.size(); i++) {
-		std::cout << "Player: " <<  this->players->items[i]->Name << "\t\t";
+		cout << "Player: " <<  this->players->items[i]->Name << "\t\t\t";
 
-		std::cout <<  this->players->items[i]->Chips << "\t";
+		cout <<  this->players->items[i]->Chips << "\t";
 
-		std::cout <<  this->players->items[i]->BetAmount << "\t";
+		cout <<  this->players->items[i]->BetAmount << "\t";
 		
 		if(this->players->items[i]->Dealer){
-			std::cout << "Dealer ";
-		}
-
-		if(this->players->items[i]->BigBlind){
-			std::cout << "BigBlind ";
+			cout << "Dealer ";
 		}
 
 		if(this->players->items[i]->SmallBlind){
-			std::cout << "LittleBlind ";
+			cout << "SmallBlind ";
+		}
+
+		if(this->players->items[i]->BigBlind){
+			cout << "BigBlind ";
 		}
 		
-		std::cout << "\n";
+		cout << "\n";
 	}
 }
 
@@ -107,33 +106,53 @@ void Poker::startHand() {
 }
 
 void Poker::takeActions() {
-	for(int i = 0;i < this->players->items.size(); i++){
 
- 		Player& player = *this->players->items[i].get();
-		
+	cout << "starting betting round!\n";
+
+	bool roundComplete(false);
+	
+	// find the player left of the big blind
+	int index = this->players->next(this->players->BigBlind());
+
+	while(!roundComplete) {
+
+		Player& player = this->players->get(index);
+
 		if(player.Folded) {
 			continue;
 		}
+
+		cout << "player " << player.Name << " going!" << endl;		
 		
-		// todo: returns max int?
-		int position = this->players->getPosition(player);
+		Position position = this->players->getPosition(player);
 
 		auto actionTaken = player.AI->getAction(this->table->Pot, this->currentbet, position, player.HoleCard, cards);
 
 		switch(actionTaken.action) {
 			
 		case(Action::Raise):
-		 	this->table->Pot += actionTaken.amount;
+			cout <<  player.Name << " " << " Raises " << actionTaken.amount << "\n";
+			this->table->Pot += actionTaken.amount;
 			this->currentbet += actionTaken.amount;
 			player.Chips -= actionTaken.amount;
 			break;
 		  
 		case(Action::Fold):
+			cout <<  player.Name << " " << " Folds.\n";
 			player.Folded = true;
 			break;
 
 		case(Action::Call):
+			cout <<  player.Name << " " << " Calls.\n";
 			break;
 		}
+
+		// get next player
+		index = this->players->next(player);
+
+		// temp exit condition
+		if(index==0) {
+			roundComplete = true;
+		}
 	}
-}
+ }

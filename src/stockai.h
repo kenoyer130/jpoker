@@ -7,7 +7,7 @@
 
 // standard ai
 class StockAI : public AI {
-	ActionTaken getAction(int pot, int currentbet, int position, Card HoleCard[], std::vector<Card> cards);
+	ActionTaken getAction(int pot, int currentbet, Position position, Card HoleCard[], std::vector<Card> cards);
 
 virtual std::unique_ptr<AI> clone() const
 {

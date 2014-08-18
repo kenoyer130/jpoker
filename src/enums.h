@@ -29,5 +29,29 @@ struct ActionTaken {
 	int amount;
 };
 
+static const std::string PositionStrings[] = {
+	"Dealer",
+	"SmallBlind",
+    "BigBlind",
+	"UnderTheGun",
+	"Position1",
+	"Position2",
+	"Position3",
+	"Position4",
+	"Position5"
+};
+
+enum class Position {
+	Dealer=8,
+	SmallBlind=0,
+	BigBlind=1,
+	UnderTheGun=2,
+	Position1=3,
+	Position2=4,
+	Position3=5,
+	Position4=6,
+	Position5=7
+};
+
 #endif
 
