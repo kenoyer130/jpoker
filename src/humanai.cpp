@@ -20,10 +20,11 @@ ActionTaken HumanAI::getAction(int pot, int currentbet, Position position, Card 
 	char input;
 
 	std::cout << "You can either [F]old, [C]all, or [R]aise:";
-	
+
 	while(!valid) {
 	
-		input = std::cin.get();
+		input = getchar();
+		getchar();
 		
 		if(input=='f' || input=='c' || input=='r') {
 			valid=true;

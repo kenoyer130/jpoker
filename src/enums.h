@@ -53,5 +53,6 @@ enum class Position {
 	Position5=7
 };
 
+
 #endif
 

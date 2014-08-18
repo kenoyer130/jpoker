@@ -36,6 +36,7 @@ void Poker::StartGame() {
 			table->Pot += this->players->ante(this->bigBlind, this->smallBlind);
 			printState();
 			startHand();
+			this->currentbet = this->bigBlind;
 			gameState =  GameState::PreFlop;
 			break;
 			
@@ -67,7 +68,6 @@ void Poker::dealHoleCards() {
 
 	cout << "Starting cards dealt!\n";
 }
-
 
 void Poker::printState() {
 
