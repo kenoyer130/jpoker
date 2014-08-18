@@ -17,9 +17,13 @@ class Players {
 
 public:
 
-Player& Dealer();
-Player& BigBlind();
-Player& SmallBlind();
+int Dealer;
+int BigBlind;
+int SmallBlind;
+
+Player& getDealer();
+Player& getBigBlind();
+Player& getSmallBlind();
  
 // constructor
 Players(Configuration config);
@@ -27,6 +31,8 @@ Players(Configuration config);
 int next(const Player& player);
 Player& get(int index);
 Player& getNext(const Player& player);
+
+int nextPlayerByIndex(int index);
 
 // moves the dealer button to the next player on the left
 // also resets the big and little blinds.

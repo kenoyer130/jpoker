@@ -82,15 +82,15 @@ void Poker::printState() {
 
 		cout <<  this->players->items[i]->BetAmount << "\t";
 		
-		if(this->players->items[i]->Dealer){
+		if(i == this->players->Dealer){
 			cout << "Dealer ";
 		}
 
-		if(this->players->items[i]->SmallBlind){
+		if(i == this->players->SmallBlind){
 			cout << "SmallBlind ";
 		}
 
-		if(this->players->items[i]->BigBlind){
+		if(i == this->players->BigBlind){
 			cout << "BigBlind ";
 		}
 		
@@ -112,7 +112,7 @@ void Poker::takeActions() {
 	bool roundComplete(false);
 	
 	// find the player left of the big blind
-	int index = this->players->next(this->players->BigBlind());
+	int index = this->players->nextPlayerByIndex(this->players->BigBlind);
 
 	while(!roundComplete) {
 

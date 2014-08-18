@@ -13,10 +13,6 @@ public:
 
 	std::unique_ptr<AI> AI;
 
-	bool Dealer;
-	bool BigBlind;
-	bool SmallBlind;
-
 	bool Folded;
 	
     std::string Name;
@@ -34,9 +30,6 @@ public:
 
      Player(Player const& other)
 		 : AI(other.AI->clone()),
-		Dealer(other.Dealer),
-		BigBlind(other.BigBlind),
-		SmallBlind(other.SmallBlind),
 		Folded(other.Folded),
 		Name(other.Name),
 		Chips(other.Chips),
@@ -49,9 +42,6 @@ public:
 	Player& operator= (const Player& other) {
 
 		//this->AI(other.AI->clone());
-		this->Dealer = other.Dealer;
-		this->BigBlind = other.BigBlind;
-		this->SmallBlind = other.SmallBlind;
 		this->Folded = other.Folded;
 		this->Name = other.Name;
 		this->Chips = other.Chips;

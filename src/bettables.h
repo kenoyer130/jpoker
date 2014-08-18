@@ -31,7 +31,7 @@ public:
 class BetTables {
 public:
 	map<int, int> HoleCards;
-	seedHoleCards();
+	void seedHoleCards();
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include "stockai.h"
 
 // constructor
+
 Players::Players(Configuration config) {
 	
 	// first player is human for faster lookup.
@@ -38,74 +39,43 @@ Players::Players(Configuration config) {
 	int startingDealer = distribution(generator);
 
 	// we set the dealer then iterator one to also properly seed the big and small blinds.
-	this->items[startingDealer]->Dealer = true;
+	this->Dealer = startingDealer;
 	nextDealer();
 }
 
-Player& Players::Dealer() {
-	for(int i = 0; i < this->items.size(); i++) {
-		if(this->items[i]-> Dealer) return *this->items[i].get();
-	}
-
-	assert(0);
+Player& Players::getDealer() {
+	return *this->items[this->Dealer];
 }	
 
-void Players::clearDealer() {
-	for(int i = 0; i < this->items.size() -1; i++) {
-		this->items[i]-> Dealer = false;
-	}
-}
-
-void Players::clearBlinds() {
-	for(int i = 0; i < this->items.size(); i++) {
-		this->items[i]->SmallBlind = false;
-		this->items[i]->BigBlind = false;
-	}
-}
-
-
-Player& Players::BigBlind() {
-	for(int i = 0; i < this->items.size(); i++) {
-		if(this->items[i]-> BigBlind) return *this->items[i].get();
-	}
-
-	assert(0);
+Player& Players::getBigBlind() {
+	return *this->items[this->BigBlind];
 }	
 
-Player& Players::SmallBlind() {
-	for(int i = 0; i < this->items.size(); i++) {
-		if(this->items[i]-> SmallBlind) return *this->items[i].get();
-	}
-
-	assert(0);
+Player& Players::getSmallBlind() {
+	return *this->items[this->SmallBlind];
 }	
 
 // moves the dealer button to the next player on the left
 // also resets the big and little blinds.
 void Players::nextDealer() {
-	// clear current
-	auto oldDealer = this->Dealer();
-	oldDealer.Dealer = false;
-		
-	this->clearBlinds();
-
 	// set next dealer
-	Player& nextDealer = getNext(oldDealer);
-	nextDealer.Dealer=true;
+	this->Dealer = next(get(this->Dealer));
 	
 	// set the blinds
-	getNext(nextDealer).SmallBlind=true;
-	getNext(this->SmallBlind()).BigBlind=true;
+	this->SmallBlind = next(get(this->Dealer));
+	this->BigBlind = next(get(this->SmallBlind));
 }
 
+// returns the combined ante of the small and big blind.
+// also decrements the big and small blind players chips.
 int Players::ante(int bigBlind, int smallBlind) {
-	Player& big = this->BigBlind();
-	Player& small = this->SmallBlind();
+	auto bigPlayer = this->get(this->BigBlind);
+	auto smallPlayer = this->get(this->SmallBlind);
 
-	int bigbet = big.bet(bigBlind);
-	int smallbet = small.bet(smallBlind);
+	int bigante = bigPlayer.bet(bigBlind);
+	int smallante = smallPlayer.bet(smallBlind);
 
-	return bigbet + smallbet;
+	return bigante + smallante;
 }
 
 // Returns an index of the player to the "left" of indicated player.
@@ -115,16 +85,19 @@ int Players::next(const Player& player) {
 	for(int i=0;i<this->items.size(); i++) {
 		
 		if(player.Name==this->items[i]->Name) {
-			// once found get the next entry or the first entry if at end
-			if(i!=this->items.size()-1) {
-				return i+1;
-			} else {
-				return 0;
-			}
+		    return nextPlayerByIndex(i);
 		}
 	}
 
 	assert(0);
+}
+
+int Players::nextPlayerByIndex(int index) {
+	if(index != this->items.size()-1) {
+		return index+1;
+	} else {
+		return 0;
+	}  
 }
 
 // returns a reference to the player at the indicated index.
@@ -144,7 +117,7 @@ Player& Players::getNext(const Player& player) {
 Position Players::getPosition(const Player& player) {
 
     // if dealer return special
-	if(this->Dealer().Name == player.Name) {
+	if(get(this->Dealer).Name == player.Name) {
 		return Position::Dealer;
 	}
 	
