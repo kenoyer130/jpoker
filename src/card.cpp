@@ -15,20 +15,20 @@ std::string Card::ToString() {
 
 	std::string value;
 	
-	if(number> 0 && number<10) {
+	if(number<9) {
 		value += std::to_string(number + 1);
 	} else {
 		switch(number){
-		case 10:
+		case 9:
 			value += "Jack";
 			break;
-		case 11:
+		case 10:
 			value += "Queen";
 			break;
-       case 12:
+       case 11:
 			value += "King";
 			break;
-		case 0:
+		case 12:
 			value += "Ace";
 			break;
 		}

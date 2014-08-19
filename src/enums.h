@@ -53,6 +53,33 @@ enum class Position {
 	Position5=7
 };
 
+static const std::string RankStrings[] = {
+	"Nothing",
+	"HighCard",
+	"OnePair",
+	"TwoPair",
+	"ThreeKind",
+	"Straight",
+	"Flush",
+	"FullHouse",
+	"FourKind",
+   	"StraightFlush",
+	"RoyalFlush"
+};
+
+enum class Rank {
+	Nothing,
+	HighCard,
+	OnePair,
+	TwoPair,
+	ThreeKind,
+	Straight,
+	Flush,
+	FullHouse,
+	FourKind,
+   	StraightFlush,
+	RoyalFlush
+};
 
 #endif
 

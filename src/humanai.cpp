@@ -3,9 +3,11 @@
 ActionTaken HumanAI::getAction(int pot, int currentbet, Position position, Card HoleCard[], std::vector<Card> cards) {
 
 	// output current state
+	cout << "\n";
 	std::cout << "Hole cards: " <<  HoleCard[0].ToString() << " ";
 	std::cout <<  HoleCard[1].ToString() << "\n\n";
-	
+
+	// TODO: add number of remaining players
 	std::cout << "pot: " << pot << " current bet:" << currentbet;
 	std::cout << " position:" << PositionStrings[static_cast<int>(position)] << "\n";
 

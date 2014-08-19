@@ -39,7 +39,7 @@ void Table::seedDeck() {
 	
 	for(int i = 0; i < 4;i++) {
 		
-		for(int c = 0;c < 13;c++) {
+		for(int c = 1;c < 14;c++) {
 			Card card;
 			card.suite = static_cast<Suite>(i);
 			card.number = c;

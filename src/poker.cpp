@@ -105,18 +105,20 @@ void Poker::startHand() {
 	dealHoleCards();
 }
 
+// loop through all active players until no more raises.
 void Poker::takeActions() {
 
 	cout << "starting betting round!\n";
 
-	bool roundComplete(false);
-	
-	// find the player left of the big blind
-	int index = this->players->nextPlayerByIndex(this->players->BigBlind);
+	// betting always starts to the left of the big blind.
+	// betting continues until play returns to the starting player.
+	// note if someone raises they then become the starting player to give all players the chance to call or fold.
+	int startingPlayer = this->players->BigBlind;
+	int currentPlayer = this->players->nextPlayerByIndex(startingPlayer); 
 
-	while(!roundComplete) {
+	while(startingPlayer!=currentPlayer) {
 
-		Player& player = this->players->get(index);
+		Player& player = this->players->get(currentPlayer);
 
 		if(player.Folded) {
 			continue;
@@ -148,11 +150,6 @@ void Poker::takeActions() {
 		}
 
 		// get next player
-		index = this->players->next(player);
-
-		// temp exit condition
-		if(index==0) {
-			roundComplete = true;
-		}
+		currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
 	}
  }
