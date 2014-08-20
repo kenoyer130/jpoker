@@ -12,9 +12,11 @@ struct HandState {
 	GameState gameState;
 	int pot{0};
 	int currentbet{0};
+	int playerbet{0};
 	Position position;
 	Card holeCard[2];
 	vector<Card> cards;
+	int raise{0};
 };
 
 class Hand {

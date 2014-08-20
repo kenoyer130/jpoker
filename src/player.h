@@ -20,7 +20,7 @@ public:
 	
 	Card HoleCard[2];
 
-	int BetAmount;
+	int BetAmount{0};
 
 	// subtracts the bet and sets the bet amount.
 	// if the bet is more then chips then returns all chips

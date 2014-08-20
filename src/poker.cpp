@@ -116,6 +116,10 @@ void Poker::takeActions() {
 	int startingPlayer = this->players->BigBlind;
 	int currentPlayer = this->players->nextPlayerByIndex(startingPlayer); 
 
+	this->currentbet = 300;
+	
+	int raise{0};
+	
 	while(startingPlayer!=currentPlayer) {
 
 		Player& player = this->players->get(currentPlayer);
@@ -130,10 +134,12 @@ void Poker::takeActions() {
 		
 		handState.gameState = this->gameState;
 		handState.pot = this->table->Pot;
+		handState.playerbet = player.BetAmount;
 		handState.currentbet = this->currentbet;
 		handState.position = this->players->getPosition(player);
 		handState.holeCard[0] = player.HoleCard[0];
 		handState.holeCard[1] = player.HoleCard[1];
+		handState.raise = raise;
 		handState.cards = cards;
 		
 		auto actionTaken = player.AI->getAction(handState);
@@ -142,9 +148,14 @@ void Poker::takeActions() {
 			
 		case(Action::Raise):
 			cout <<  player.Name << " " << " Raises " << actionTaken.amount << "\n";
+			raise++;
 			this->table->Pot += actionTaken.amount;
 			this->currentbet += actionTaken.amount;
 			player.Chips -= actionTaken.amount;
+			player.BetAmount += actionTaken.amount;
+
+			// whenever someone raises we need to go back around.
+			startingPlayer = currentPlayer;
 			break;
 		  
 		case(Action::Fold):
@@ -154,6 +165,10 @@ void Poker::takeActions() {
 
 		case(Action::Call):
 			cout <<  player.Name << " " << " Calls.\n";
+
+			this->table->Pot += this->currentbet;
+			player.Chips -= this->currentbet;
+			
 			break;
 		}
 

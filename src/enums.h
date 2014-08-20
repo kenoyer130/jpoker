@@ -27,6 +27,7 @@ enum class Action {
 struct ActionTaken {
 	Action action;
 	int amount;
+	int raised;
 };
 
 static const std::string PositionStrings[] = {
@@ -39,8 +40,8 @@ static const std::string PositionStrings[] = {
 enum class Position {
 	Early,
 	Middle,
-		Late,
-		Dealer
+	Late,
+	Dealer
 };
 
 static const std::string RankStrings[] = {
