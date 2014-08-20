@@ -1,30 +1,23 @@
-#ifndef Hand_H
-#define Hand_H
+// "Copyright 2014 jkenoyer"
 
-#include <algorithm>
+#ifndef SRC_HAND_H_
+#define SRC_HAND_H_
+
 #include <vector>
-#include <map>
+#include "./card.h"
 
-#include "enums.h"
-#include "card.h"
-
-using namespace std;
+using std::vector;
 
 class Hand {
+    HandRank getFlush();
+    HandRank getStraight();
+    HandRank getSame();
+    HandRank getPair();
 
-HandRank getFlush();
-HandRank getStraight();
-HandRank getSame();
-HandRank getPair();
-
-public:
-
-vector<Card> cards;
-
-Hand(vector<Card> cards);
-
-HandRank getRanking();
-
+ public:
+    vector<Card> cards;
+    explicit Hand(vector<Card> cards);
+    HandRank getRanking();
 };
 
-#endif
+#endif  // SRC_HAND_H_
