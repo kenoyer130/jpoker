@@ -4,131 +4,183 @@ Hand::Hand(vector<Card> cards) {
 	this->cards = cards;
 }
 
-Rank Hand::getRanking() {
+HandRank Hand::getRanking() {
 
 	// sort cards
-	sort(this->cards.begin(), this->cards.end(),
-		 [](const Card& a, const Card & b) -> bool
-		 { 
-			 return a.number > b.number; 
-		 });
-
-	// are we same suite?
-	bool flush = sameSuite();
-	bool straight = inOrder();
-	bool same = sameKind();
-
+	sort(this->cards.begin(), this->cards.end());
+	
 	// check from best to worst possible hands.
 
-	// royal flush
-	if(this->cards.size() == 5 && flush && straight && this->cards[4].number==13) {
-		return Rank::RoyalFlush;
-	}
+	HandRank flushHand = getFlush();
+	HandRank straightHand = getStraight();
+	HandRank sameHand = getSame();
+	HandRank pairHand = getPair();
 	
 	// straight flush
-	if(flush && straight) {
-		return Rank::StraightFlush;
+	if(flushHand.rank == Rank::Flush && straightHand.rank == Rank::Straight) {
+		HandRank hand;
+		hand.card = (flushHand.card.number > straightHand.card.number) ? flushHand.card : straightHand.card;
+		hand.rank = Rank::StraightFlush;
+				
+		return hand;
 	}
 
 	// four of a kind
-	if(this->cards.size() > 3 && same) {
-		return Rank::FourKind;
+	if(sameHand.rank == Rank::FourKind) {
+		return sameHand;
 	}
 
 	// full house
-	if(this->cards.size() == 5) {
-		// first two cards must be the same
-		if((this->cards[0].number == this->cards[1].number) &&
-		   // third card must match second or fourth
-		   (this->cards[1].number == this->cards[2].number || this->cards[2].number == this->cards[3].number) &&
-		   // last two cards must be the same
-		   (this->cards[3].number == this->cards[4].number)) {
-			return Rank::FullHouse;
-		}
+	// note a full house techinically has two pair
+	if(sameHand.rank == Rank::ThreeKind && pairHand.rank == Rank::TwoPair) {
+
+		sameHand.rank = Rank::FullHouse;
+		return sameHand;
 	}
 
 	// flush
-	if(flush) {
-		return Rank::Flush;
+	if(flushHand.rank==Rank::Flush) {
+		return flushHand;
 	}
 
 	// straight
-	if(straight) {
-		return Rank::Straight;
+	if(straightHand.rank==Rank::Straight) {
+		return straightHand;
 	}
 
 	// three of a kind
-	if(this->cards.size()>2 && same) {
-		return Rank::ThreeKind;
+	if(sameHand.rank == Rank::ThreeKind) {
+		return sameHand;
 	}
 
-    // two pair
-	if(this->cards.size()) {
+    // one or two pair
+	if(pairHand.rank == Rank::TwoPair || pairHand.rank == Rank::OnePair) {
+		return pairHand;
+	}
 
-		int pairCount = 0;
+    // high card
+	HandRank handRank;
+    handRank.card = this->cards[this->cards.size() -1];
+    handRank.rank = Rank::HighCard;
+
+    return handRank;
+ }
+
+ HandRank Hand::getFlush() {
+
+	 HandRank hand{};
+	 
+	 Suite suite = this->cards[0].suite;
+	 
+	 // if any card does not match
+	 for(int i=1; i<this->cards.size(); i++) {
+		 if(this->cards[i].suite != suite) {
+			 return hand;
+		 }
+	 }
+
+	 // if we make it here we got a flush
+	 hand.rank = Rank::Flush;
+	 hand.card = this->cards[this->cards.size()-1];
+
+	 return hand;
+ }
+
+HandRank Hand::getStraight() {
+	// since cards are sorted start with first and see if we are in a row
+
+	HandRank hand{};
+
+	Card first = this->cards[0];
+	
+	for (int i = 1; i < this->cards.size(); i++) {
+		if(this->cards[i].number != first.number + i) {
+			return hand;
+		}
+	}	
+
+	// if we made it here we have a straight
+	hand.rank = Rank::Straight;
+	hand.card = this->cards[this->cards.size()-1];
+
+	return hand;
+}
+
+HandRank Hand::getSame() {
+	
+	int same;
+	Card card{};
+	
+	for (int i = 0; i < this->cards.size(); i++) {
+		int count(1);
+
+		for (int j = i + 1; j < this->cards.size(); j++) {
+			if(this->cards[i].number!=this->cards[j].number) {
+				break;
+			}
+
+			count++;
+		}
+
+		// set the card and count 
+		if(count > same && count > 2) {
+			card = this->cards[i];
+			same = count;
+		}
+	}
+	
+	HandRank hand{};
+
+	// have less then 3 of a kind
+	if(same < 3) {
+		return hand;
+	}
+
+	hand.rank = (same==4) ? Rank::FourKind : Rank::ThreeKind;
+	hand.card = card;
+
+	return hand;
+}
+
+HandRank Hand::getPair() {
+
+	// place pairs in map to not have dupe pairs
+	// in the case of 3-4 of a kind etc
+	map<int,Card> m;
 		
-		for (int i = 0; i < this->cards.size()-1; i++) {
-			for(int j = i+1; j < this->cards.size()-1; j++) {
-				if(this->cards[i].number ==  this->cards[i].number) {
-					pairCount++;
-				}
+	for (int i = 0; i < this->cards.size(); i++) {
+
+		int count(0);
+		
+		for (int j  = i; j < this->cards.size(); j++) {
+			if(this->cards[j].number == this->cards[i].number) {
+				count++;
 			}
 		}
 
-		if(pairCount == 2) {
-			return Rank::TwoPair;
+		if(count == 2 && m.find(this->cards[i].number) == m.end()) {
+			m[this->cards[i].number] = this->cards[i];
 		}
 	}
 
-    // one pair
-	if(same) {
-		 return Rank::OnePair;
-	 }
-
-	 // high cards
-	 if(this->cards[0].number > 9 || this->cards[1].number > 9) {
-		 return Rank::HighCard;
-	 }
-
-	 // nothing
-	 return Rank::Nothing;
- }
-
- bool Hand::sameKind() {
-
-	 int number = this->cards[0].number;
-
-	 for(int i = 1; i < this->cards.size(); i++) {
-		 if(this->cards[i].number!=number) {
-			 return false;
-		 }
-	 }
-
-	 return true;
- }
-
- bool Hand::sameSuite() {
-	 Suite suite = this->cards[0].suite;
-
-	 for(int i=0;i<this->cards.size();i++) {
-		 if(this->cards[i].suite!=suite) {
-			 return false;
-		 }
-	 }
-
-	 return true;
- }
-
- // todo : check for wheels
- bool Hand::inOrder() {
-	 int start = this->cards[0].number;
-
-	 for(int i = 1; i < this->cards.size(); i++ ) {
-		 if(this->cards[i].number != start + i) {
-			return false;
-		}
+	// now put pairs into vector and sort
+	vector<Card> pairs;
+	
+	for(auto& card: m) { 
+		pairs.push_back(card.second);
 	}
 
-   return true;
+    sort(pairs.begin(), pairs.end());
+	
+	HandRank hand{};
+
+	if(pairs.size() == 0) {
+		return hand;
+	}
+
+	hand.card = pairs[pairs.size()-1];
+	
+	hand.rank = (pairs.size() == 1) ? Rank::OnePair : Rank:: TwoPair;
+
+	return hand;
 }
-

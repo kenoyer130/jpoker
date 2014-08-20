@@ -12,8 +12,8 @@ enum class GameState {
 enum class Suite {
 	HEART=0,
 	SPADE=1,
-	CLOVER=2,
-	DIAMOND=3
+	CLUBS=2,
+	DIAMOND=4
 };
 
 static const std::string SuiteStrings[] = { "Hearts", "Spades", "Clubs", "Diamonds" };	
@@ -77,8 +77,7 @@ enum class Rank {
 	Flush,
 	FullHouse,
 	FourKind,
-   	StraightFlush,
-	RoyalFlush
+   	StraightFlush
 };
 
 #endif

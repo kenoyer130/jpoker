@@ -8,13 +8,33 @@
 
 class Card {
 public:
+	
     int number;
 	Suite suite;
 
+	// constructors
 	Card();
 	Card(int number, Suite suite);
+
+	// sorter
+	bool operator<(const Card &rhs) const { return number < rhs.number; }
 	
 	std::string ToString();
+};
+
+
+// represents a certain hand ranking and the highest card.
+// for example a Rank of ThreeKind and Card.number=5 would be
+// 3 fives. A Rank of Flush with Card.number=9 means a flush 10 high.
+class HandRank {
+
+public:
+	Rank rank;
+	Card card;
+
+HandRank(): rank(Rank::Nothing) {
+		
+	}
 };
 
 #endif

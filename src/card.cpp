@@ -2,8 +2,8 @@
 
 #include "card.h"
 
-Card::Card() {
-	
+Card::Card(): number(-1), suite(Suite::HEART) {
+
 }
 
 Card::Card(int number, Suite suite) {

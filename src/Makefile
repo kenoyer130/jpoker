@@ -12,20 +12,23 @@ OBJS =  \
  player.o \
  players.o \
  table.o \
- poker.o \
- main.o
+ poker.o
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
 
-all : $(LINK_TARGET)
+all : bin/jpoker.exe test/handtester.exe
 	echo "done!"
 
-$(LINK_TARGET) : $(OBJS)
+bin/jpoker.exe : $(OBJS) main.o
+	$(COMPILER) $(OPTIONS) -o $@ $^
+
+test/handtester.exe : $(OBJS) rank_tester.o
 	$(COMPILER) $(OPTIONS) -o $@ $^
 
 %.o : %.cpp
 	$(COMPILER) $(OPTIONS) -o $@ -c $<
 
+rank_tester.o : rank_tester.h
 configurator.o : configurator.h
 hand.o : hand.h
 humanai.o : humanai.h
