@@ -6,10 +6,12 @@
 #include "ai.h"
 #include "hand.h"
 
+using std::cout;
+
 // standard ai
 class StockAI : public AI {
 		
-	ActionTaken getAction(int pot, int currentbet, Position position, Card HoleCard[], std::vector<Card> cards);
+	ActionTaken getAction(HandState handState);
 
 	virtual std::unique_ptr<AI> clone() const
 	{

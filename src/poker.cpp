@@ -125,10 +125,18 @@ void Poker::takeActions() {
 		}
 
 		cout << "player " << player.Name << " going!" << endl;		
-		
-		Position position = this->players->getPosition(player);
 
-		auto actionTaken = player.AI->getAction(this->table->Pot, this->currentbet, position, player.HoleCard, cards);
+		HandState handState;
+		
+		handState.gameState = this->gameState;
+		handState.pot = this->table->Pot;
+		handState.currentbet = this->currentbet;
+		handState.position = this->players->getPosition(player);
+		handState.holeCard[0] = player.HoleCard[0];
+		handState.holeCard[1] = player.HoleCard[1];
+		handState.cards = cards;
+		
+		auto actionTaken = player.AI->getAction(handState);
 
 		switch(actionTaken.action) {
 			

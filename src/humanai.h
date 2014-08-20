@@ -10,7 +10,7 @@ using namespace std;
 // represents an AI that asks for human input
 class HumanAI : public AI {
 
-ActionTaken getAction(int pot, int currentbet, Position position, Card holeCard[2], vector<Card> cards);
+ActionTaken getAction(HandState handState);
 
 virtual unique_ptr<AI> clone() const
 {

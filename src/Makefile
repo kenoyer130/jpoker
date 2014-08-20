@@ -41,4 +41,5 @@ player.o : player.h
 table.o : table.h
 poker.o : poker.h
 
-
+clean : 
+	rm *.o

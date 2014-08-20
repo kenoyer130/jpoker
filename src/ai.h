@@ -6,13 +6,13 @@
 
 #include "enums.h"
 #include "card.h"
+#include "hand.h"
 
 class AI {
 
 public:
 
-	ActionTaken virtual getAction(int pot, int currentbet, Position position, Card holeCards[], std::vector<Card> cards) = 0;
-
+	ActionTaken virtual getAction(HandState handState) = 0;
 	virtual std::unique_ptr<AI> clone() const = 0; 
 	
 };

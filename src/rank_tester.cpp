@@ -1,5 +1,7 @@
 #include "rank_tester.h"
 
+#include <random>
+
 // poor mans unit tests
 int main() {
 	RankTester tester;

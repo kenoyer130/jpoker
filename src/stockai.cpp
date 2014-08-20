@@ -1,15 +1,15 @@
 #include "stockai.h"
 
-ActionTaken StockAI::getAction(int pot, int currentbet, Position position, Card holeCard[], std::vector<Card> cards) {
+ActionTaken StockAI::getAction(HandState handState) {
 
 	ActionTaken result;
 
-	cards.push_back(holeCard[0]);
-	cards.push_back(holeCard[1]);
+	handState.cards.push_back(handState.holeCard[0]);
+	handState.cards.push_back(handState.holeCard[1]);
 
-	HandRank hand = Hand(cards).getRanking();
+	HandRank hand = Hand(handState.cards).getRanking();
 
-	cout << " " << holeCard[0].ToString() << " " << holeCard[1].ToString();
+	cout << " " << handState.holeCard[0].ToString() << " " <<  handState.holeCard[1].ToString();
 	cout << RankStrings[static_cast<int>(hand.rank)] << "\n";
 	
 	// if none is found we got crap so fold

@@ -8,6 +8,15 @@
 
 using std::vector;
 
+struct HandState {
+	GameState gameState;
+	int pot{0};
+	int currentbet{0};
+	Position position;
+	Card holeCard[2];
+	vector<Card> cards;
+};
+
 class Hand {
     HandRank getFlush();
     HandRank getStraight();

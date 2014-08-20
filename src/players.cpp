@@ -113,7 +113,6 @@ Player& Players::getNext(const Player& player) {
 }
 
 // figures out the players position in relation to the dealer.
-// return -  0 if under the gun etc. higher is better.
 Position Players::getPosition(const Player& player) {
 
     // if dealer return special
@@ -136,7 +135,9 @@ Position Players::getPosition(const Player& player) {
 			index = this->next(current);
 		}
 	}
-		
+
+	position = position / 3;
+	
 	return static_cast<Position>(position);
 }
 
