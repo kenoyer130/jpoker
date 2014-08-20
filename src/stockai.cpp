@@ -20,6 +20,8 @@ ActionTaken StockAI::getAction(HandState handState) {
 	cout << " " << handState.holeCard[0].ToString() << " " <<  handState.holeCard[1].ToString();
     cout << " " << RankStrings[static_cast<int>(hand.rank)] << "\n";
 
+cout << PositionStrings[static_cast<int>(handState.position)] <<"\n";
+
 	ActionTaken result;
 
     // get the current rank for our hand

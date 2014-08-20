@@ -124,11 +124,11 @@ Position Players::getPosition(const Player& player) {
 	int position(0);
 	bool found(false);
 
-	int index = this->next(player);
+	int index = this->Dealer;
 	
 	while(!found) {
 		Player& current = this->get(index);
-		if(current.Name==player.Name){
+		if(current.Name == player.Name){
 			found = true;
 		} else {
 			position++;
@@ -136,7 +136,7 @@ Position Players::getPosition(const Player& player) {
 		}
 	}
 
-	position = position / 3;
+	position = (items.size() - position) / 3;
 	
 	return static_cast<Position>(position);
 }
