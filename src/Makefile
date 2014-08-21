@@ -1,6 +1,11 @@
 COMPILER = clang++
 OPTIONS = -std=c++0x -g -Wall
 
+CPPFLAGS += -isystem ./include
+
+GTEST_HEADERS =  include/gtest/*.h \
+                 include/gtest/internal/*.h
+
 LINK_TARGET = bin/jpoker.exe
 
 OBJS =  \
@@ -12,25 +17,27 @@ OBJS =  \
  player.o \
  players.o \
  table.o \
- poker.o
+ poker.o \
+ 
+TESTS = \
+hand_test.o
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
 
-all : bin/jpoker.exe test/handtester.exe
+all : bin/jpoker.exe bin/tests.exe
 	echo "done!"
 
 bin/jpoker.exe : $(OBJS) main.o
-	$(COMPILER) $(OPTIONS) -o $@ $^
+	$(COMPILER) $(OPTIONS) $(CPPFLAGS) -o $@ $^
 
-test/handtester.exe : $(OBJS) rank_tester.o
-	$(COMPILER) $(OPTIONS) -o $@ $^
+bin/tests.exe : $(OBJS) $(TESTS)
+	$(COMPILER) $(OPTIONS) $(CPPFLAGS) -o $@ $^ lib/gtest_main.a -pthread
 
 %.o : %.cpp
-	$(COMPILER) $(OPTIONS) -o $@ -c $<
+	$(COMPILER) $(OPTIONS) $(CPPFLAGS) -o $@ -c $<
 
-rank_tester.o : rank_tester.h
 configurator.o : configurator.h
-hand.o : hand.h
+hand.o : hand.h 
 humanai.o : humanai.h
 stockai.o : stockai.h
 poker.h: enums.h
@@ -40,6 +47,7 @@ card.o: card.h
 player.o : player.h
 table.o : table.h
 poker.o : poker.h
+hand_test.o: hand.o
 
 clean : 
 	rm *.o

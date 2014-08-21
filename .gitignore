@@ -8,3 +8,5 @@ GTAGS
 *.ghc
 *.exe
 test
+cpplint.py
+*.a

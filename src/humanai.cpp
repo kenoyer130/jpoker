@@ -11,7 +11,7 @@ ActionTaken HumanAI::getAction(HandState handState) {
 	std::cout << "pot: " <<  handState.pot << " current bet:" <<  handState.currentbet;
 	std::cout << " position:" << PositionStrings[static_cast<int>( handState.position)] << "\n";
 
-	if(handState.cards.size() > 0) {
+	if (handState.cards.size() > 0) {
 		for(Card card :  handState.cards) {
 			std::cout << card.ToString() << " ";
 		}
@@ -20,7 +20,7 @@ ActionTaken HumanAI::getAction(HandState handState) {
 	std::cout << "\n";
 
 	// get action to take
-	bool valid;
+	bool valid{false};
 	char input;
 
 	std::cout << "You can either [F]old, [C]all, or [R]aise:";
