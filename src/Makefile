@@ -20,6 +20,7 @@ OBJS =  \
  poker.o \
  
 TESTS = \
+players_test.o \
 hand_test.o
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
@@ -30,7 +31,7 @@ all : bin/jpoker.exe bin/tests.exe
 bin/jpoker.exe : $(OBJS) main.o
 	$(COMPILER) $(OPTIONS) $(CPPFLAGS) -o $@ $^
 
-bin/tests.exe : $(OBJS) $(TESTS)
+bin/tests.exe : $(OBJS) $(TESTS) tests.o
 	$(COMPILER) $(OPTIONS) $(CPPFLAGS) -o $@ $^ lib/gtest_main.a -pthread
 
 %.o : %.cpp

@@ -136,7 +136,7 @@ Position Players::getPosition(const Player& player) {
 		}
 	}
 
-	position = (items.size() - position) / 3;
+	position = (this->items.size() - position) / 3;
 	
 	return static_cast<Position>(position);
 }
