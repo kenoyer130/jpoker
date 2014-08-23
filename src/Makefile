@@ -9,6 +9,7 @@ GTEST_HEADERS =  include/gtest/*.h \
 LINK_TARGET = bin/jpoker.exe
 
 OBJS =  \
+ jout.o \
  configurator.o \
  hand.o \
  humanai.o \

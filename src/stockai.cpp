@@ -10,11 +10,10 @@ ActionTaken StockAI::getAction(HandState handState) {
 
 	HandRank hand = Hand(handState.cards).getRanking();
 
-	// debug info.
-	jout << " " << handState.holeCard[0].ToString() << " " <<  handState.holeCard[1].ToString();
-    jout << " " << RankStrings[static_cast<int>(hand.rank)] << "\n";
+	debug << " " << handState.holeCard[0].ToString() << " " <<  handState.holeCard[1].ToString();
+    debug << " " << RankStrings[static_cast<int>(hand.rank)] << "\n";
 
-	// jout << PositionStrings[static_cast<int>(handState.position)] <<"\n";
+	debug << "position: " << PositionStrings[static_cast<int>(handState.position)] <<"\n";
 
 	ActionTaken result;
 
@@ -23,40 +22,60 @@ ActionTaken StockAI::getAction(HandState handState) {
 
 	if(handState.gameState == GameState::PreFlop) {
 		rank = getPreFlopDecision(hand, handState);
+
+		debug << "preflop rank: " << rank << "\n";
 	}
+
+	// modify rank based off position
 
     // if worst position subtract 2
     if (handState.position == Position::Early) {
-      rank -= 2;
+		debug << "early position -2\n";	
+		rank -= 2;
    }
 
+	// if mid position subtract 1
+    if (handState.position == Position::Middle) {
+		debug << "mid position -1\n";	
+		rank -= 2;
+   }
+	
    // if late
    if(handState.position == Position::Late) {
-     rank += 1;
+	   debug << "late position +1\n";	
+	   rank += 1;
    }
 
    // if dealer add 1
    if(handState.position == Position::Dealer) {
-    rank += 1;
+	   debug << "dealer position +1\n";
+	   rank += 1;
    }
 
    // if pressured from raises
    rank -= handState.raise;
- 
-   if(rank > 0 && handState.currentbet > 0) {
-     result.action = Action::Call;
-   } else if (rank > 0) {
+
+   if(handState.raise > 0) {
+	   debug << "rank after raises " << handState.raise  << ": " << rank;
+   }
+   
+   debug << "final rank: " << rank << "\n";
+
+   // if no bet and non-raise hand just check
+   if(handState.currentbet == 0 && rank < 3) {
+	   result.action = Action::Check;
+   } else if (rank > 0 && rank <3) {
+	   // if bet and decent hand just call
+	   result.action = Action::Call;
+   } else if (rank > 2) {
+	   // good hand so raise
 	   result.action = Action::Raise;
 	   result.amount = 200;
    } else {
+	   // bail!
 	   result.action = Action::Fold;
    }
 
-	// any folds are converted to calls if we get a free bet
-	if(handState.currentbet == 0 && result.action == Action::Fold) {
-		result.action = Action::Check;
-	}
-	
 	return result;
 }
 
@@ -66,7 +85,7 @@ int StockAI::getPreFlopDecision(HandRank hand, HandState handState) {
 	if(hand.rank == Rank::OnePair && hand.card.number > 9) {
 		return 5;
 	}
-
+	
 // bet on on pairs
 	if(hand.rank == Rank::OnePair) {
 		return 4;

@@ -219,6 +219,8 @@ void Poker::takeActions() {
 			break;
 		}
 		
+		getchar();
+		
 		// get next player
 		currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
 	}

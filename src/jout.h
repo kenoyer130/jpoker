@@ -3,6 +3,8 @@
 
 #define jout Jout()
 
+#define debug Debug()
+
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
@@ -50,6 +52,25 @@ public:
 		
         return *this;
     }
+};
+
+class Debug {
+
+public:
+	static int DebugEnabled;
+	
+    template<typename T> Debug& operator << (const T& data) {
+
+		if(Debug::DebugEnabled == 1) {
+			jout << data;
+		}
+
+        return *this;
+    }
+	
+	Debug () {
+
+	}
 };
 
 #endif /* JOUT_H */
