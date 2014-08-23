@@ -6,6 +6,9 @@
 enum class GameState {
 	HandStart,
 	PreFlop,
+    Flop,
+	Turn,
+	River,
 	GameEnd
 };
 
@@ -21,6 +24,7 @@ static const std::string SuiteStrings[] = { "Hearts", "Spades", "Clubs", "Diamon
 enum class Action {
 	Fold,
 	Call,
+	Check,
 	Raise
 };
 

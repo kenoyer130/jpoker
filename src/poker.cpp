@@ -34,7 +34,6 @@ void Poker::StartGame() {
 			resetPlayers();
 			this->players->nextDealer();
 			table->Pot += this->players->ante(this->bigBlind, this->smallBlind);
-			printState();
 			startHand();
 			this->currentbet = this->bigBlind;
 			gameState =  GameState::PreFlop;
@@ -42,7 +41,25 @@ void Poker::StartGame() {
 			
 		case GameState::PreFlop:
 			takeActions();
-			gameState = GameState::GameEnd;
+			gameState =  GameState::Flop;
+			break;
+
+		case GameState::Flop:
+			dealCards(3);
+			takeActions();
+			gameState =  GameState::Turn;
+			break;
+
+		case GameState::Turn:
+			dealCards(1);
+			takeActions();
+			gameState =  GameState::River;
+			break;
+
+		case GameState::River:
+			dealCards(1);
+			takeActions();
+			gameState =  GameState::GameEnd;
 			break;
 			
 	  	case GameState::GameEnd:
@@ -69,13 +86,30 @@ void Poker::dealHoleCards() {
 	cout << "Starting cards dealt!\n";
 }
 
+void Poker::dealCards(int number) {
+	for(int j=0; j < number; j++) {
+		this->cards.push_back(table->DealCard());
+	}
+}
+
 void Poker::printState() {
 
+	cout << "cards: ";
+
+	for (int i=0; i<this->cards.size(); i++) {
+		cout << this->cards[i].ToString() << " ";
+	}
+	
+	cout << endl;
+	
 	cout << "\n";
 	cout << "Pot: " << this->table->Pot << "\n";
 	cout << "\n";
 	
 	for(int i = 0; i <  this->players->items.size(); i++) {
+
+		if(this->players->items[i]->Folded) continue;
+
 		cout << "Player: " <<  this->players->items[i]->Name << "\t\t\t";
 
 		cout <<  this->players->items[i]->Chips << "\t";
@@ -89,7 +123,7 @@ void Poker::printState() {
 		if(i == this->players->SmallBlind){
 			cout << "SmallBlind ";
 		}
-
+		
 		if(i == this->players->BigBlind){
 			cout << "BigBlind ";
 		}
@@ -108,15 +142,21 @@ void Poker::startHand() {
 // loop through all active players until no more raises.
 void Poker::takeActions() {
 
+	printState();
+	
 	cout << "starting betting round!\n";
-
+	
 	// betting always starts to the left of the big blind.
 	// betting continues until play returns to the starting player.
 	// note if someone raises they then become the starting player to give all players the chance to call or fold.
 	int startingPlayer = this->players->BigBlind;
 	int currentPlayer = this->players->nextPlayerByIndex(startingPlayer); 
 
-	this->currentbet = 300;
+	// small and big blinds already bet
+	this->players->getSmallBlind().BetAmount = this->smallBlind;
+	this->players->getBigBlind().BetAmount = this->bigBlind;
+	
+	this->currentbet = 200;
 	
 	int raise{0};
 	
@@ -149,8 +189,10 @@ void Poker::takeActions() {
 		case(Action::Raise):
 			cout <<  player.Name << " " << " Raises " << actionTaken.amount << "\n";
 			raise++;
-			this->table->Pot += actionTaken.amount;
+
+			this->table->Pot += actionTaken.amount + this->currentbet;
 			this->currentbet += actionTaken.amount;
+
 			player.Chips -= actionTaken.amount;
 			player.BetAmount += actionTaken.amount;
 
@@ -170,8 +212,12 @@ void Poker::takeActions() {
 			player.Chips -= this->currentbet;
 			
 			break;
-		}
 
+	    case(Action::Check):
+			cout <<  player.Name << " " << " Checks.\n";
+			break;
+		}
+		
 		// get next player
 		currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
 	}

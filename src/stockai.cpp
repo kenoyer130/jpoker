@@ -42,16 +42,18 @@ ActionTaken StockAI::getAction(HandState handState) {
    // if pressured from raises
    rank -= handState.raise;
  
-   if(rank > 0 && handState.raise > 0) {
+   if(rank > 0 && handState.currentbet > 0) {
      result.action = Action::Call;
-   } else if (rank > 0 && handState.raise == 0) {
+   } else if (rank > 0) {
 	   result.action = Action::Raise;
 	   result.amount = 200;
+   } else {
+	   result.action = Action::Fold;
    }
 
 	// any folds are converted to calls if we get a free bet
 	if(handState.currentbet == 0 && result.action == Action::Fold) {
-		result.action = Action::Call;
+		result.action = Action::Check;
 	}
 	
 	return result;

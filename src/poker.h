@@ -28,6 +28,7 @@ private:
 	void printState();
 	void startHand();
 	void dealHoleCards();
+	void dealCards(int number);
 };
 
 #endif
