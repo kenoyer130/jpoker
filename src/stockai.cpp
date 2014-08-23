@@ -14,7 +14,7 @@ ActionTaken StockAI::getAction(HandState handState) {
 		debug << " " << handState.cards[i];
 	}
 
-	debug << " : card ranking: " << RankStrings[static_cast<int>(hand.rank)] << "\n"; 
+	debug << " : card ranking: " << static_cast<int>(hand.rank) << " " << RankStrings[static_cast<int>(hand.rank)] << "\n"; 
 
 	debug << "\nposition: " << handState.position <<"\n";
 

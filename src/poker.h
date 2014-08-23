@@ -29,6 +29,9 @@ private:
 	void startHand();
 	void dealHoleCards();
 	void dealCards(int number);
+	void handOver();
+	void playerWon(int playerIndex);
+	
 };
 
 #endif

@@ -6,7 +6,7 @@
 
 Poker::Poker() {
 
-// load config
+    // load config
 	Configurator configurator;
 	Configuration config = configurator.Get();
 	
@@ -41,26 +41,53 @@ void Poker::StartGame() {
 			break;
 			
 		case GameState::PreFlop:
+			jout << "Preflop\n";
+
 			takeActions();
-			gameState =  GameState::Flop;
+
+			if(gameState!=GameState:RoundOver) {
+				gameState =  GameState::Flop;
+			}
+			
 			break;
 
 		case GameState::Flop:
+			jout << "Flop\n";
+
 			dealCards(3);
+
 			takeActions();
-			gameState =  GameState::Turn;
+
+			if(gameState!=GameState:RoundOver) {
+				gameState =  GameState::Turn;
+			}
+
 			break;
 
 		case GameState::Turn:
+			jout << "Turn\n";
+
 			dealCards(1);
+
 			takeActions();
-			gameState =  GameState::River;
+
+			if(gameState!=GameState:RoundOver) {
+				gameState =  GameState::River;
+			}
+
 			break;
 
 		case GameState::River:
+			jout << "River\n";
+
 			dealCards(1);
+
 			takeActions();
-			gameState =  GameState::GameEnd;
+
+			break;
+
+		case GameState::RoundOver:
+			
 			break;
 			
 	  	case GameState::GameEnd:
@@ -159,9 +186,12 @@ void Poker::takeActions() {
 	
 	while(startingPlayer!=currentPlayer) {
 
+		debug << "starting player " << startingPlayer << " current: " << currentPlayer << "\n";
+		
 		Player& player = this->players->get(currentPlayer);
 
 		if(player.Folded) {
+			currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
 			continue;
 		}
 
@@ -214,10 +244,70 @@ void Poker::takeActions() {
 			jout <<  player.Name << " " << " Checks.\n";
 			break;
 		}
-		
+
+		jout << "pause\n";
 		getchar();
+
+		jout << "get next player!\n";
 		
 		// get next player
 		currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
 	}
+
+	// is our hand over?
+	handOver();
  }
+
+void Poker::handOver() {
+
+	vector<int> activePlayers = this->players->activePlayers();
+
+	// if there is only one person left
+	if(activePlayers.size() == 1) {
+		playerWon(activePlayers[0]);
+		return;
+	}
+
+	// if it is the river its showdown time!
+	if(this->gameState ==  GameState::River) {
+
+		HandRank highRank;
+		int winningPlayer;
+
+		for (int i = 0; i < activePlayers.size(); i++) {
+			vector<Card> c {this->cards};
+
+			c.push_back(players->items[activePlayers[i]]->HoleCard[0]);
+			c.push_back(players->items[activePlayers[i]]->HoleCard[1]);
+
+			Hand hand(c);
+			HandRank handRank = hand.getRanking();
+
+			if(handRank.rank > highRank.rank) {
+				highRank = handRank;
+				winningPlayer = i;
+			} else if((handRank.rank == highRank.rank)
+					  && handRank.card.number > highRank.card.number) {
+				highRank = handRank;
+				winningPlayer = i;
+			}
+
+			//todo deal with ties
+		}
+
+		playerWon(activePlayers[winningPlayer]);
+	}
+}
+
+void Poker::playerWon(int index) {
+
+	jout << this->players->items[index]->Name << " won!";
+	
+	this->gameState = GameState::RoundOver;
+
+	this->players->items[index]->Chips += this->table->Pot;
+	
+	jout << this->players->items[index]->Name;
+	jout << " winnings: " << this->table->Pot;
+	jout << " chips: " << this->players->items[index]->Chips << "\n";
+}

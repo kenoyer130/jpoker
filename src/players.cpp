@@ -140,6 +140,19 @@ int Players::getPosition(const Player& player) {
 	return (this->items.size() - position);
 }
 
+vector<int> Players::activePlayers() {
+
+	vector<int> active;
+	
+	for (int i = 0; i < this->items.size(); i++) {
+		if(!this->items[i]->Folded) {
+			active.push_back(i);
+		}
+	}
+
+	return active;
+}
+
 // removes player
 void Players::remove(Player& player) {
 	

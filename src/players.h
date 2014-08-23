@@ -47,6 +47,9 @@ void remove(Player& player);
 
 std::vector<std::unique_ptr<Player>> items;
 
+// returns indexs of all players who haven't folded
+vector<int> activePlayers();
+
 private:
 
 void clearDealer();

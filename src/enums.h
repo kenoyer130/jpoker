@@ -9,6 +9,7 @@ enum class GameState {
     Flop,
 	Turn,
 	River,
+	RoundOver,
 	GameEnd
 };
 
