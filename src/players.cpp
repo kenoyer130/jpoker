@@ -113,11 +113,11 @@ Player& Players::getNext(const Player& player) {
 }
 
 // figures out the players position in relation to the dealer.
-Position Players::getPosition(const Player& player) {
+int Players::getPosition(const Player& player) {
 
     // if dealer return special
 	if(get(this->Dealer).Name == player.Name) {
-		return Position::Dealer;
+		return -1;
 	}
 	
 	// walk through and find out how far we are from the dealer.
@@ -125,7 +125,8 @@ Position Players::getPosition(const Player& player) {
 	bool found(false);
 
 	int index = this->Dealer;
-	
+
+	// loop around until we find the dealer
 	while(!found) {
 		Player& current = this->get(index);
 		if(current.Name == player.Name){
@@ -135,10 +136,8 @@ Position Players::getPosition(const Player& player) {
 			index = this->next(current);
 		}
 	}
-
-	position = (this->items.size() - position) / 3;
 	
-	return static_cast<Position>(position);
+	return (this->items.size() - position);
 }
 
 // removes player

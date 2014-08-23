@@ -40,7 +40,7 @@ void nextDealer();
 
 int ante(int bigBlind, int smallBlind);
 
-Position getPosition(const Player& player);
+int getPosition(const Player& player);
 
 // removes player
 void remove(Player& player);

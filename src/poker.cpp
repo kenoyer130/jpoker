@@ -94,19 +94,9 @@ void Poker::dealCards(int number) {
 }
 
 void Poker::printState() {
-
-	jout << "cards: ";
-
-	for (int i=0; i<this->cards.size(); i++) {
-		jout << this->cards[i] << " ";
-	}
 	
-	jout << "\n";
-	
-	jout << "\n";
-	jout << "Pot: " << this->table->Pot << "\n";
-	jout << "\n";
-	
+	jout << "\nPot: " << this->table->Pot << "\n";
+		
 	for(int i = 0; i <  this->players->items.size(); i++) {
 
 		if(this->players->items[i]->Folded) continue;
@@ -130,6 +120,12 @@ void Poker::printState() {
 		}
 		
 		jout << "\n";
+	}
+	
+	jout << "cards: ";
+
+	for (int i=0; i<this->cards.size(); i++) {
+		jout << this->cards[i] << " ";
 	}
 }
 

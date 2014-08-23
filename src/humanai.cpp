@@ -10,7 +10,7 @@ ActionTaken HumanAI::getAction(HandState handState) {
 
 	// TODO: add number of remaining players
 	jout << "pot: " <<  handState.pot << " current bet:" <<  handState.currentbet;
-	jout << " position:" << PositionStrings[static_cast<int>( handState.position)] << "\n";
+	jout << "\nposition:" << handState.position << "\n";
 
 	if (handState.cards.size() > 0) {
 		for(Card card :  handState.cards) {

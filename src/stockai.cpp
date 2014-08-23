@@ -14,7 +14,9 @@ ActionTaken StockAI::getAction(HandState handState) {
 		debug << " " << handState.cards[i];
 	}
 
-	debug << "position: " << PositionStrings[static_cast<int>(handState.position)] <<"\n";
+	debug << " : card ranking: " << RankStrings[static_cast<int>(hand.rank)] << "\n"; 
+
+	debug << "\nposition: " << handState.position <<"\n";
 
 	ActionTaken result;
 
@@ -28,54 +30,31 @@ ActionTaken StockAI::getAction(HandState handState) {
 	}
 
 	// modify rank based off position
+	rank = rank - (handState.position/2);
+    
+	// if pressured from raises
+	rank -= handState.raise;
 
-    // if worst position subtract 2
-    if (handState.position == Position::Early) {
-		debug << "early position -2\n";	
-		rank -= 2;
-   }
-
-	// if mid position subtract 1
-    if (handState.position == Position::Middle) {
-		debug << "mid position -1\n";	
-		rank -= 2;
-   }
-	
-   // if late
-   if(handState.position == Position::Late) {
-	   debug << "late position +1\n";	
-	   rank += 1;
-   }
-
-   // if dealer add 1
-   if(handState.position == Position::Dealer) {
-	   debug << "dealer position +1\n";
-	   rank += 1;
-   }
-
-   // if pressured from raises
-   rank -= handState.raise;
-
-   if(handState.raise > 0) {
-	   debug << "rank after raises " << handState.raise  << ": " << rank;
-   }
+	if(handState.raise > 0) {
+		debug << "\nrank after raises " << handState.raise  << ": " << rank << "\n";
+	}
    
-   debug << "final rank: " << rank << "\n";
+	debug << "final rank: " << rank << "\n";
 
-   // if no bet and non-raise hand just check
-   if(handState.currentbet == 0 && rank < 3) {
-	   result.action = Action::Check;
-   } else if (rank > 0 && rank <3) {
-	   // if bet and decent hand just call
-	   result.action = Action::Call;
-   } else if (rank > 2) {
+	// if no bet and non-raise hand just check
+	if(handState.currentbet == 0 && rank < 3) {
+		result.action = Action::Check;
+	} else if (rank > 0 && rank <3) {
+		// if bet and decent hand just call
+		result.action = Action::Call;
+	} else if (rank > 2) {
 	   // good hand so raise
-	   result.action = Action::Raise;
-	   result.amount = 200;
-   } else {
-	   // bail!
-	   result.action = Action::Fold;
-   }
+		result.action = Action::Raise;
+		result.amount = 200;
+	} else {
+		// bail!
+		result.action = Action::Fold;
+	}
 
 	return result;
 }

@@ -34,20 +34,6 @@ struct ActionTaken {
 	int raised;
 };
 
-static const std::string PositionStrings[] = {
-	"Early",
-	"Middle",
-    "Late",
-	"Dealer"
-};
-
-enum class Position {
-	Early,
-	Middle,
-	Late,
-	Dealer
-};
-
 static const std::string RankStrings[] = {
 	"Nothing",
 	"HighCard",
