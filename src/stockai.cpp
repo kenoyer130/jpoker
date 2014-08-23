@@ -10,8 +10,9 @@ ActionTaken StockAI::getAction(HandState handState) {
 
 	HandRank hand = Hand(handState.cards).getRanking();
 
-	debug << " " << handState.holeCard[0].ToString() << " " <<  handState.holeCard[1].ToString();
-    debug << " " << RankStrings[static_cast<int>(hand.rank)] << "\n";
+	for (int i = 0; i < handState.cards.size(); i++) {
+		debug << " " << handState.cards[i].ToString();
+	}
 
 	debug << "position: " << PositionStrings[static_cast<int>(handState.position)] <<"\n";
 
