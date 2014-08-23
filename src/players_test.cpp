@@ -12,9 +12,9 @@ TEST(PlayersTest, EarlyPositionTest) {
 	Players players(config.Get());
 
 	// set dealer to last player
-	players.Dealer = players.items.size() - 1;
+	players.Dealer = 0;
 
-	Player& testPlayer = *players.items[players.items.size()-2];
+	Player& testPlayer = *players.items[1];
 	
 	// act
 	Position position = players.getPosition(testPlayer);
@@ -30,15 +30,15 @@ TEST(PlayersTest, MiddlePositionTest) {
 	Players players(config.Get());
 
 	// set dealer to last player
-	players.Dealer = players.items.size() - 1;
+	players.Dealer = 0;
 
-	Player& testPlayer = *players.items[players.items.size()-4];
+	Player& testPlayer = *players.items[4];
 	
 	// act
 	Position position = players.getPosition(testPlayer);
 
 	// assert
-	EXPECT_EQ(Position::Early, position);
+	EXPECT_EQ(Position::Middle, position);
 }
 
 TEST(PlayersTest, LatePositionTest) {
@@ -48,9 +48,9 @@ TEST(PlayersTest, LatePositionTest) {
 	Players players(config.Get());
 
 	// set dealer to last player
-	players.Dealer = players.items.size() - 1;
+	players.Dealer = 0;
 
-	Player& testPlayer = *players.items[0];
+	Player& testPlayer = *players.items[8];
 	
 	// act
 	Position position = players.getPosition(testPlayer);

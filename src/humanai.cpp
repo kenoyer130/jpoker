@@ -23,7 +23,7 @@ ActionTaken HumanAI::getAction(HandState handState) {
 	bool valid{false};
 	char input;
 
-	std::cout << "You can either [F]old, [C]all, or [R]aise:";
+	std::cout << "You can either [F]old, [C]all (" << handState.currentbet  << "), or [R]aise:";
 
 	while(!valid) {
 	

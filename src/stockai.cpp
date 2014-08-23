@@ -3,14 +3,7 @@
 #include <cmath>
 
 ActionTaken StockAI::getAction(HandState handState) {
-
-   // if raised just call for now
-	if(handState.raise > 0 && handState.playerbet == handState.currentbet) {
-		ActionTaken action;
-		action.action = Action::Call;
-		return action;
-	}
-	
+  	
 	handState.cards.push_back(handState.holeCard[0]);
 	handState.cards.push_back(handState.holeCard[1]);
 
@@ -20,7 +13,7 @@ ActionTaken StockAI::getAction(HandState handState) {
 	cout << " " << handState.holeCard[0].ToString() << " " <<  handState.holeCard[1].ToString();
     cout << " " << RankStrings[static_cast<int>(hand.rank)] << "\n";
 
-cout << PositionStrings[static_cast<int>(handState.position)] <<"\n";
+	// cout << PositionStrings[static_cast<int>(handState.position)] <<"\n";
 
 	ActionTaken result;
 
@@ -41,18 +34,19 @@ cout << PositionStrings[static_cast<int>(handState.position)] <<"\n";
      rank += 1;
    }
 
-   // if dealer add 2
+   // if dealer add 1
    if(handState.position == Position::Dealer) {
-    rank += 2;
+    rank += 1;
    }
 
    // if pressured from raises
    rank -= handState.raise;
-
-   // we decided to raise!
-   if(rank > 0) {
-     result.action = Action::Raise;
-     result.amount = 200;
+ 
+   if(rank > 0 && handState.raise > 0) {
+     result.action = Action::Call;
+   } else if (rank > 0 && handState.raise == 0) {
+	   result.action = Action::Raise;
+	   result.amount = 200;
    }
 
 	// any folds are converted to calls if we get a free bet

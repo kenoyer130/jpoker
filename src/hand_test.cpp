@@ -145,3 +145,15 @@ TEST(HandTest, HighCard) {
 	EXPECT_EQ(handRank.rank, Rank::HighCard);
 	EXPECT_EQ(handRank.card.number, 11);
 }
+
+TEST(HandTest, ThreeKindFalse) {
+
+	vector<Card> cards;
+	cards.push_back(Card(3, Suite::HEART));
+	cards.push_back(Card(11, Suite::SPADE));
+
+	HandRank handRank = getHand(cards);
+	
+	EXPECT_EQ(handRank.rank, Rank::HighCard);
+	EXPECT_EQ(handRank.card.number, 11);
+}
