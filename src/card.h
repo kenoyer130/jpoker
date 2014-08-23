@@ -3,10 +3,15 @@
 
 #include <string>
 #include <sstream>
+#include <iostream>
 
 #include "enums.h"
+#include "jout.h"
+
+using std::ostream;
 
 class Card {
+	
 public:
 	
     int number;
@@ -18,15 +23,14 @@ public:
 
 	// sorter
 	bool operator<(const Card &rhs) const { return number < rhs.number; }
-	
-	std::string ToString();
-};
 
+    friend ostream& operator<<(ostream& os, const Card& c);
+};
 
 // represents a certain hand ranking and the highest card.
 // for example a Rank of ThreeKind and Card.number=5 would be
 // 3 fives. A Rank of Flush with Card.number=9 means a flush 10 high.
-class HandRank {
+ class HandRank {
 
 public:
 	Rank rank;

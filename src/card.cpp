@@ -10,22 +10,23 @@ Card::Card(int number, Suite suite) {
 	this->number = number;
 	this->suite = suite;
 }
-
-std::string Card::ToString() {
-
+	
+// stream output operator
+ostream& operator << (ostream& os, const Card& c)
+{	
 	std::string value;
 	
-	if(number<10) {
-		value += std::to_string(number + 1);
+	if(c.number<10) {
+		value += std::to_string(c.number + 2);
 	} else {
-		switch(number){
+		switch(c.number){
 		case 10:
 			value += "Jack";
 			break;
 		case 11:
 			value += "Queen";
 			break;
-       case 12:
+		case 12:
 			value += "King";
 			break;
 		case 13:
@@ -36,9 +37,11 @@ std::string Card::ToString() {
 
 	value += " of ";
 
-	int val = static_cast<int>(suite);
+	int val = static_cast<int>(c.suite);
 	value += SuiteStrings[val];
 
-	return value;
+	os << value;
+	
+	return os;
 }
 

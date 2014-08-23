@@ -98,7 +98,7 @@ void Poker::printState() {
 	jout << "cards: ";
 
 	for (int i=0; i<this->cards.size(); i++) {
-		jout << this->cards[i].ToString() << " ";
+		jout << this->cards[i] << " ";
 	}
 	
 	jout << "\n";

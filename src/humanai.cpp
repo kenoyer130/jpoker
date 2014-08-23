@@ -5,8 +5,8 @@ ActionTaken HumanAI::getAction(HandState handState) {
 
 	// output current state
 	jout << "\n";
-	jout << "Hole cards: " <<  handState.holeCard[0].ToString() << " ";
-	jout <<  handState.holeCard[1].ToString() << "\n\n";
+	jout << "Hole cards: " <<  handState.holeCard[0] << " ";
+	jout <<  handState.holeCard[1] << "\n\n";
 
 	// TODO: add number of remaining players
 	jout << "pot: " <<  handState.pot << " current bet:" <<  handState.currentbet;
@@ -14,7 +14,7 @@ ActionTaken HumanAI::getAction(HandState handState) {
 
 	if (handState.cards.size() > 0) {
 		for(Card card :  handState.cards) {
-			jout << card.ToString() << " ";
+			jout << card << " ";
 		}
 	}
 
