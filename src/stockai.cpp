@@ -1,4 +1,5 @@
 #include "./stockai.h"
+#include "jout.h"
 
 #include <cmath>
 
@@ -10,10 +11,10 @@ ActionTaken StockAI::getAction(HandState handState) {
 	HandRank hand = Hand(handState.cards).getRanking();
 
 	// debug info.
-	cout << " " << handState.holeCard[0].ToString() << " " <<  handState.holeCard[1].ToString();
-    cout << " " << RankStrings[static_cast<int>(hand.rank)] << "\n";
+	jout << " " << handState.holeCard[0].ToString() << " " <<  handState.holeCard[1].ToString();
+    jout << " " << RankStrings[static_cast<int>(hand.rank)] << "\n";
 
-	// cout << PositionStrings[static_cast<int>(handState.position)] <<"\n";
+	// jout << PositionStrings[static_cast<int>(handState.position)] <<"\n";
 
 	ActionTaken result;
 

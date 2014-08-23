@@ -1,36 +1,48 @@
+#include "jout.h"
 #include "humanai.h"
 
 ActionTaken HumanAI::getAction(HandState handState) {
 
 	// output current state
-	cout << "\n";
-	std::cout << "Hole cards: " <<  handState.holeCard[0].ToString() << " ";
-	std::cout <<  handState.holeCard[1].ToString() << "\n\n";
+	jout << "\n";
+	jout << "Hole cards: " <<  handState.holeCard[0].ToString() << " ";
+	jout <<  handState.holeCard[1].ToString() << "\n\n";
 
 	// TODO: add number of remaining players
-	std::cout << "pot: " <<  handState.pot << " current bet:" <<  handState.currentbet;
-	std::cout << " position:" << PositionStrings[static_cast<int>( handState.position)] << "\n";
+	jout << "pot: " <<  handState.pot << " current bet:" <<  handState.currentbet;
+	jout << " position:" << PositionStrings[static_cast<int>( handState.position)] << "\n";
 
 	if (handState.cards.size() > 0) {
 		for(Card card :  handState.cards) {
-			std::cout << card.ToString() << " ";
+			jout << card.ToString() << " ";
 		}
 	}
 
-	std::cout << "\n";
+	jout << "\n";
 
+	// can we just check?
+	bool canCheck {handState.currentbet == 0};
+		
 	// get action to take
 	bool valid{false};
 	char input;
 
-	std::cout << "You can either [F]old, [C]all (" << handState.currentbet  << "), or [R]aise:";
+	jout << "You can either [F]old, [C]all (" << handState.currentbet  << ")";
+
+	if (canCheck) {
+		jout << ", chec[K] ";
+	}
+	
+	jout <<	", or [R]aise:";
 
 	while(!valid) {
 	
 		input = getchar();
+
+		// eat endl
 		getchar();
 		
-		if(input=='f' || input=='c' || input=='r') {
+		if(input=='f' || input=='c' || input=='r' || (canCheck && input=='k')) {
 			valid=true;
 		}
 	}
@@ -42,13 +54,15 @@ ActionTaken HumanAI::getAction(HandState handState) {
 	case 'f':
 		result.action=Action::Fold;
 		break;
+	case 'k':
+		result.action=Action::Check;
 	case 'c':
 		result.action=Action::Call;
 		break;
 	case 'r':
 		result.action=Action::Raise;
 	    // todo: currently hardcoded
-		result.amount = 300; 
+		result.amount = 200; 
 		break;
 	}
 

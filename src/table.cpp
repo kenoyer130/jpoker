@@ -2,7 +2,9 @@
 #include <assert.h>
 
 #include <random>
+
 #include "table.h"
+#include "jout.h"
 
 Table::Table(Configuration config) {
 	this->config = config;
@@ -10,7 +12,7 @@ Table::Table(Configuration config) {
 
 void Table::ShuffleDeck() {
 
-	std::cout << "shuffling deck!\n";
+	jout << "shuffling deck!\n";
 	
 	seedDeck();
 
@@ -49,6 +51,6 @@ void Table::seedDeck() {
 	}
 
 	//for(Card card:Deck) {
-	//	std::cout << card.ToString() << "\n";
+	//	std::jout << card.ToString() << "\n";
 	// }
 }

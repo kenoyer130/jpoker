@@ -7,7 +7,6 @@
 
 #include "enums.h"
 
-using std::cout;
 using std::vector;
 using std::map;
 

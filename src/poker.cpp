@@ -1,11 +1,12 @@
-#include <iostream>
 
 #include "enums.h"
 #include "poker.h"
 #include "table.h"
+#include "jout.h"
 
 Poker::Poker() {
-	// load config
+
+// load config
 	Configurator configurator;
 	Configuration config = configurator.Get();
 	
@@ -25,7 +26,7 @@ void Poker::StartGame() {
 
 	gameState = GameState::HandStart;
 
-	cout << "Starting Game! Good luck!\n";
+	jout << "Starting Game! Good luck!\n";
 	
 	while(gameState!=GameState::GameEnd) {
 		switch(gameState){
@@ -63,7 +64,7 @@ void Poker::StartGame() {
 			break;
 			
 	  	case GameState::GameEnd:
-			cout << "Game Over!\n";
+			jout << "Game Over!\n";
 			break;
 		}
 	}
@@ -83,7 +84,7 @@ void Poker::dealHoleCards() {
 		this->players->items[i]->HoleCard[1] = table->DealCard();
 	}
 
-	cout << "Starting cards dealt!\n";
+	jout << "Starting cards dealt!\n";
 }
 
 void Poker::dealCards(int number) {
@@ -94,41 +95,41 @@ void Poker::dealCards(int number) {
 
 void Poker::printState() {
 
-	cout << "cards: ";
+	jout << "cards: ";
 
 	for (int i=0; i<this->cards.size(); i++) {
-		cout << this->cards[i].ToString() << " ";
+		jout << this->cards[i].ToString() << " ";
 	}
 	
-	cout << endl;
+	jout << "\n";
 	
-	cout << "\n";
-	cout << "Pot: " << this->table->Pot << "\n";
-	cout << "\n";
+	jout << "\n";
+	jout << "Pot: " << this->table->Pot << "\n";
+	jout << "\n";
 	
 	for(int i = 0; i <  this->players->items.size(); i++) {
 
 		if(this->players->items[i]->Folded) continue;
 
-		cout << "Player: " <<  this->players->items[i]->Name << "\t\t\t";
+		jout << "Player: " <<  this->players->items[i]->Name << "\t\t\t";
 
-		cout <<  this->players->items[i]->Chips << "\t";
+		jout <<  this->players->items[i]->Chips << "\t";
 
-		cout <<  this->players->items[i]->BetAmount << "\t";
+		jout <<  this->players->items[i]->BetAmount << "\t";
 		
 		if(i == this->players->Dealer){
-			cout << "Dealer ";
+			jout << "Dealer ";
 		}
 
 		if(i == this->players->SmallBlind){
-			cout << "SmallBlind ";
+			jout << "SmallBlind ";
 		}
 		
 		if(i == this->players->BigBlind){
-			cout << "BigBlind ";
+			jout << "BigBlind ";
 		}
 		
-		cout << "\n";
+		jout << "\n";
 	}
 }
 
@@ -144,7 +145,7 @@ void Poker::takeActions() {
 
 	printState();
 	
-	cout << "starting betting round!\n";
+	jout << "starting betting round!\n";
 	
 	// betting always starts to the left of the big blind.
 	// betting continues until play returns to the starting player.
@@ -168,7 +169,7 @@ void Poker::takeActions() {
 			continue;
 		}
 
-		cout << "player " << player.Name << " going!" << endl;		
+		jout << "player " << player.Name << " going!" << "\n";		
 
 		HandState handState;
 		
@@ -187,7 +188,7 @@ void Poker::takeActions() {
 		switch(actionTaken.action) {
 			
 		case(Action::Raise):
-			cout <<  player.Name << " " << " Raises " << actionTaken.amount << "\n";
+			jout <<  player.Name << " " << " Raises " << actionTaken.amount << "\n";
 			raise++;
 
 			this->table->Pot += actionTaken.amount + this->currentbet;
@@ -201,12 +202,12 @@ void Poker::takeActions() {
 			break;
 		  
 		case(Action::Fold):
-			cout <<  player.Name << " " << " Folds.\n";
+			jout <<  player.Name << " " << " Folds.\n";
 			player.Folded = true;
 			break;
 
 		case(Action::Call):
-			cout <<  player.Name << " " << " Calls.\n";
+			jout <<  player.Name << " " << " Calls.\n";
 
 			this->table->Pot += this->currentbet;
 			player.Chips -= this->currentbet;
@@ -214,7 +215,7 @@ void Poker::takeActions() {
 			break;
 
 	    case(Action::Check):
-			cout <<  player.Name << " " << " Checks.\n";
+			jout <<  player.Name << " " << " Checks.\n";
 			break;
 		}
 		
