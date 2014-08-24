@@ -32,11 +32,11 @@ void Poker::StartGame() {
 		switch(gameState){
 
 		case GameState::HandStart:
-			resetPlayers();
+			this->cards.clear();
 			this->players->nextDealer();
-			table->Pot += this->players->ante(this->bigBlind, this->smallBlind);
+			table->Pot = this->players->ante(this->bigBlind, this->smallBlind);
 			startHand();
-			this->currentbet = this->bigBlind;
+			
 			gameState =  GameState::PreFlop;
 			break;
 			
@@ -45,7 +45,7 @@ void Poker::StartGame() {
 
 			takeActions();
 
-			if(gameState!=GameState:RoundOver) {
+			if(gameState!=GameState::HandEnd) {
 				gameState =  GameState::Flop;
 			}
 			
@@ -58,7 +58,7 @@ void Poker::StartGame() {
 
 			takeActions();
 
-			if(gameState!=GameState:RoundOver) {
+			if(gameState!=GameState::HandEnd) {
 				gameState =  GameState::Turn;
 			}
 
@@ -71,7 +71,7 @@ void Poker::StartGame() {
 
 			takeActions();
 
-			if(gameState!=GameState:RoundOver) {
+			if(gameState!=GameState::HandEnd) {
 				gameState =  GameState::River;
 			}
 
@@ -86,7 +86,20 @@ void Poker::StartGame() {
 
 			break;
 
-		case GameState::RoundOver:
+		case GameState::HandEnd:
+			// remove any players that have no chips
+			for (int i = this->players->items.size() -1; i > -1 ; i--) {
+				if(this->players->items[i]->Chips < 1) {
+					this->players->remove(i);
+				}
+			}
+
+			// if no more players the game is over!
+			if(this->players->items.size() > 1) {
+				this->gameState = GameState::HandStart;	
+			} else {
+				this->gameState = GameState::GameEnd;
+			}			
 			
 			break;
 			
@@ -99,8 +112,12 @@ void Poker::StartGame() {
 
 void Poker::resetPlayers(){
 	for(int i = 0;i < this->players->items.size(); i++){
+
 		this->players->items[i]->BetAmount = 0;
-		this->players->items[i]->Folded = false;
+
+		if(this->gameState == GameState::PreFlop){
+			this->players->items[i]->Folded = false;
+		}
 	}
 }
 
@@ -152,8 +169,10 @@ void Poker::printState() {
 	jout << "cards: ";
 
 	for (int i=0; i<this->cards.size(); i++) {
-		jout << this->cards[i] << " ";
+		jout << this->cards[i] << ",";
 	}
+
+	jout << "\n";
 }
 
 void Poker::startHand() {
@@ -166,28 +185,38 @@ void Poker::startHand() {
 // loop through all active players until no more raises.
 void Poker::takeActions() {
 
+	resetPlayers();
+	
+	this->currentbet = 0;
+	
 	printState();
 	
 	jout << "starting betting round!\n";
 	
-	// betting always starts to the left of the big blind.
-	// betting continues until play returns to the starting player.
-	// note if someone raises they then become the starting player to give all players the chance to call or fold.
-	int startingPlayer = this->players->BigBlind;
-	int currentPlayer = this->players->nextPlayerByIndex(startingPlayer); 
+	int startingPlayer {0};
+	int currentPlayer {0};
 
-	// small and big blinds already bet
-	this->players->getSmallBlind().BetAmount = this->smallBlind;
-	this->players->getBigBlind().BetAmount = this->bigBlind;
+	if(this->gameState == GameState::PreFlop) {
+
+		startingPlayer = this->players->BigBlind;
+
+		// small and big blinds already bet
+		this->players->getSmallBlind().BetAmount = this->smallBlind;
+		this->players->getBigBlind().BetAmount = this->bigBlind;
+
+		this->currentbet = this->bigBlind;
 	
-	this->currentbet = 200;
-	
+	} else {
+
+		startingPlayer = this->players->Dealer;	
+	}
+
+	currentPlayer = this->players->nextPlayerByIndex(startingPlayer);
+		
 	int raise{0};
 	
 	while(startingPlayer!=currentPlayer) {
 
-		debug << "starting player " << startingPlayer << " current: " << currentPlayer << "\n";
-		
 		Player& player = this->players->get(currentPlayer);
 
 		if(player.Folded) {
@@ -248,8 +277,6 @@ void Poker::takeActions() {
 		jout << "pause\n";
 		getchar();
 
-		jout << "get next player!\n";
-		
 		// get next player
 		currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
 	}
@@ -264,6 +291,9 @@ void Poker::handOver() {
 
 	// if there is only one person left
 	if(activePlayers.size() == 1) {
+		// mucking is when you win and do not have to show your cards.
+		// thus possibly hiding a bluff.
+		jout << players->items[activePlayers[0]]->Name << " mucks cards\n";
 		playerWon(activePlayers[0]);
 		return;
 	}
@@ -283,6 +313,8 @@ void Poker::handOver() {
 			Hand hand(c);
 			HandRank handRank = hand.getRanking();
 
+			jout << players->items[activePlayers[i]]->Name << " : " << RankStrings[static_cast<int>(handRank.rank)] << "\n";
+			
 			if(handRank.rank > highRank.rank) {
 				highRank = handRank;
 				winningPlayer = i;
@@ -295,19 +327,24 @@ void Poker::handOver() {
 			//todo deal with ties
 		}
 
+		jout << players->items[winningPlayer]->Name << " : " << RankStrings[static_cast<int>(highRank.rank)] << "\n";
+
 		playerWon(activePlayers[winningPlayer]);
 	}
 }
 
 void Poker::playerWon(int index) {
 
-	jout << this->players->items[index]->Name << " won!";
+	jout << this->players->items[index]->Name << " won!\n";
 	
-	this->gameState = GameState::RoundOver;
+	this->gameState = GameState::HandEnd;
 
 	this->players->items[index]->Chips += this->table->Pot;
 	
 	jout << this->players->items[index]->Name;
 	jout << " winnings: " << this->table->Pot;
-	jout << " chips: " << this->players->items[index]->Chips << "\n";
+	jout << " chips: " << this->players->items[index]->Chips << "\n\n";
+
+	getchar();
+	getchar();
 }

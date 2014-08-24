@@ -43,7 +43,7 @@ int ante(int bigBlind, int smallBlind);
 int getPosition(const Player& player);
 
 // removes player
-void remove(Player& player);
+void remove(int index);
 
 std::vector<std::unique_ptr<Player>> items;
 

@@ -9,15 +9,15 @@ enum class GameState {
     Flop,
 	Turn,
 	River,
-	RoundOver,
+	HandEnd,
 	GameEnd
 };
 
 enum class Suite {
-	HEART=0,
-	SPADE=1,
-	CLUBS=2,
-	DIAMOND=4
+	HEART,
+	SPADE,
+	CLUBS,
+	DIAMOND
 };
 
 static const std::string SuiteStrings[] = { "Hearts", "Spades", "Clubs", "Diamonds" };	

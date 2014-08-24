@@ -118,14 +118,15 @@ HandRank Hand::getStraight() {
 
 HandRank Hand::getSame() {
     
-    int same;
+    int same {0};
     Card card{};
     
     for (int i = 0; i < this->cards.size(); i++) {
-        int count(1);
+
+		int count {1};
 
         for (int j = i + 1; j < this->cards.size(); j++) {
-            if(this->cards[i].number!=this->cards[j].number) {
+            if(this->cards[i].number != this->cards[j].number) {
                 break;
             }
 

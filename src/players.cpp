@@ -154,7 +154,12 @@ vector<int> Players::activePlayers() {
 }
 
 // removes player
-void Players::remove(Player& player) {
+void Players::remove(int index) {
+
+	Player& loser = this->get(index);
+
+	jout << loser.Name << " has left the table.\n";
 	
+	this->items.erase(this->items.begin() +  index);
 }
 

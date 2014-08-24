@@ -3,22 +3,22 @@
 
 ActionTaken HumanAI::getAction(HandState handState) {
 
+	// TODO: add number of remaining players
+	jout << "pot: " <<  handState.pot << " current bet:" <<  handState.currentbet;
+	jout << "\n";
+
 	// output current state
 	jout << "\n";
 	jout << "Hole cards: " <<  handState.holeCard[0] << " ";
-	jout <<  handState.holeCard[1] << "\n\n";
+	jout <<  handState.holeCard[1] << " ";
 
-	// TODO: add number of remaining players
-	jout << "pot: " <<  handState.pot << " current bet:" <<  handState.currentbet;
-	jout << "\nposition:" << handState.position << "\n";
+	handState.cards.push_back(handState.holeCard[0]);
+	handState.cards.push_back(handState.holeCard[1]);
 
-	if (handState.cards.size() > 0) {
-		for(Card card :  handState.cards) {
-			jout << card << " ";
-		}
-	}
+	Hand hand(handState.cards);
+	HandRank handRank = hand.getRanking();
 
-	jout << "\n";
+	jout << "rank: " << RankStrings[static_cast<int>(handRank.rank)] << "\n";
 
 	// can we just check?
 	bool canCheck {handState.currentbet == 0};
