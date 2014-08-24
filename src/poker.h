@@ -2,7 +2,7 @@
 #define Poker_H
 
 #include "enums.h"
-#include "table.h"
+#include "deck.h"
 
 using namespace std;
 
@@ -12,7 +12,9 @@ public:
 	void StartGame();
 
 private:
-	std::unique_ptr<Table> table;
+
+	Deck deck {};
+	
 	std::unique_ptr<Players> players;
 
     std::vector<Card> cards;
@@ -21,6 +23,8 @@ private:
 	
 	GameState gameState;
 
+	double Pot;
+		
 	int bigBlind {0};
 	int smallBlind {0};
 	int handBlinds {0};

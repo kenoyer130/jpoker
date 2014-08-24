@@ -3,14 +3,10 @@
 
 #include <random>
 
-#include "table.h"
+#include "deck.h"
 #include "jout.h"
 
-Table::Table(Configuration config) {
-	this->config = config;
-}
-
-void Table::ShuffleDeck() {
+void Deck::ShuffleDeck() {
 
 	jout << "shuffling deck!\n";
 	
@@ -19,25 +15,25 @@ void Table::ShuffleDeck() {
 	// implements fisher and yates in place shuffle
 	std::default_random_engine generator((unsigned int)time(0));
 
-	for(int i = Deck.size(); i > -1; i --) {
+	for(int i = deck.size(); i > -1; i --) {
 		std::uniform_int_distribution<int> distribution(0,i);
 		int j = distribution(generator); 
 
-		Card temp = Deck[j];
-		Deck[j] = Deck[i];
-		Deck[i] = temp;
+		Card temp = deck[j];
+		deck[j] = deck[i];
+		deck[i] = temp;
 	} 
 }
 
 // deals one card off the top of the deck
-Card Table::DealCard() {
-	Card card = Deck.back();
-	Deck.pop_back();
+Card Deck::DealCard() {
+	Card card = deck.back();
+	deck.pop_back();
 	return card;
 }
 
-void Table::seedDeck() {
-	Deck.clear();
+void Deck::seedDeck() {
+	deck.clear();
 	
 	for(int i = 0; i < 4;i++) {
 		
@@ -46,7 +42,7 @@ void Table::seedDeck() {
 			card.suite = static_cast<Suite>(i);
 			card.number = c;
 
-			Deck.push_back(card);
+			deck.push_back(card);
 		}
 	}
 

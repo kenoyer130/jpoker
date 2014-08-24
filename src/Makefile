@@ -17,7 +17,7 @@ OBJS =  \
  card.o \
  player.o \
  players.o \
- table.o \
+ deck.o \
  poker.o \
  
 TESTS = \
@@ -47,7 +47,7 @@ player.o: player.h
 players.o: players.h
 card.o: card.h
 player.o : player.h
-table.o : table.h
+deck.o : deck.h
 poker.o : poker.h
 hand_test.o: hand.o
 

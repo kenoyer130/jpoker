@@ -1,7 +1,7 @@
 
 #include "enums.h"
 #include "poker.h"
-#include "table.h"
+#include "deck.h"
 #include "jout.h"
 
 Poker::Poker() {
@@ -17,10 +17,6 @@ Poker::Poker() {
 	// set players
 	auto players = unique_ptr<Players>(new Players(config));
 	this->players = move(players);
-
-	// set table
-	auto table = unique_ptr<Table>(new Table(config));
-	this->table = move(table);
 }
 
 void Poker::StartGame() {
@@ -35,10 +31,10 @@ void Poker::StartGame() {
 		case GameState::HandStart:
 			this->cards.clear();
 			this->players->nextDealer();
-			table->Pot = this->players->ante(this->bigBlind, this->smallBlind);
+			this->Pot = this->players->ante(this->bigBlind, this->smallBlind);
 			startHand();
 			
-			gameState =  GameState::PreFlop;
+			gameState = GameState::PreFlop;
 			break;
 			
 		case GameState::PreFlop:
@@ -57,8 +53,8 @@ void Poker::StartGame() {
 
 			takeActions();
 
-			if(gameState!=GameState::HandEnd) {
-				gameState =  GameState::Turn;
+			if(gameState != GameState::HandEnd) {
+				gameState = GameState::Turn;
 			}
 
 			break;
@@ -132,8 +128,8 @@ void Poker::resetPlayers(){
 void Poker::dealHoleCards() {
 
 	for(int i = 0;i < this->players->items.size(); i++){
-		this->players->items[i]->HoleCard[0] = table->DealCard();
-		this->players->items[i]->HoleCard[1] = table->DealCard();
+		this->players->items[i]->HoleCard[0] = deck.DealCard();
+		this->players->items[i]->HoleCard[1] = deck.DealCard();
 	}
 
 	jout << "Starting cards dealt!\n";
@@ -141,7 +137,7 @@ void Poker::dealHoleCards() {
 
 void Poker::dealCards(int number) {
 	for(int j=0; j < number; j++) {
-		this->cards.push_back(table->DealCard());
+		this->cards.push_back(deck.DealCard());
 	}
 }
 
@@ -176,7 +172,7 @@ void Poker::printState() {
 		jout << "\n";
 	}
 	
-	jout << "Pot: " << this->table->Pot << " ";
+	jout << "Pot: " << this->Pot << " ";
 	jout << "Bet: " << this->currentbet << "\n";
 	
 	jout << "cards: ";
@@ -190,7 +186,7 @@ void Poker::printState() {
 
 void Poker::startHand() {
 
-	table->ShuffleDeck();
+	deck.ShuffleDeck();
 
 	dealHoleCards();
 }
@@ -240,7 +236,7 @@ void Poker::takeActions() {
 		HandState handState;
 		
 		handState.gameState = this->gameState;
-		handState.pot = this->table->Pot;
+		handState.pot = this->Pot;
 		handState.playerbet = player.BetAmount;
 		handState.currentbet = this->currentbet;
 		handState.position = this->players->getPosition(player);
@@ -267,7 +263,7 @@ void Poker::takeActions() {
 				amount = player.Chips;
 			}
 			
-			this->table->Pot += amount + this->currentbet;
+			this->Pot += amount + this->currentbet;
 			this->currentbet += amount;
 
 			player.Chips -= amount;
@@ -294,7 +290,7 @@ void Poker::takeActions() {
 				currentbet = player.Chips;
 			}
 			
-			this->table->Pot += currentbet;
+			this->Pot += currentbet;
 			player.Chips -= currentbet;
 			
 			break;
@@ -379,10 +375,10 @@ void Poker::playerWon(int index) {
 	
 	this->gameState = GameState::HandEnd;
 
-	this->players->items[index]->Chips += this->table->Pot;
+	this->players->items[index]->Chips += this->Pot;
 	
 	jout << this->players->items[index]->Name;
-	jout << " winnings: " << this->table->Pot;
+	jout << " winnings: " << this->Pot;
 	jout << " chips: " << this->players->items[index]->Chips << "\n\n";
 
 	getchar();
