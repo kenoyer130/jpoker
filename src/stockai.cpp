@@ -57,7 +57,7 @@ ActionTaken StockAI::getAction(HandState handState) {
 	} else if (rank > 2) {
 	   // good hand so raise
 		result.action = Action::Raise;
-		result.amount = 200;
+		result.amount = handState.bigBlind;
 	} else {
 		// bail!
 		result.action = Action::Fold;

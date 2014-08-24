@@ -16,12 +16,15 @@ private:
 	std::unique_ptr<Players> players;
 
     std::vector<Card> cards;
-	int currentbet;
+
+	int currentbet {0};
 	
 	GameState gameState;
 
-	int bigBlind;
-	int smallBlind;
+	int bigBlind {0};
+	int smallBlind {0};
+	int handBlinds {0};
+	int handCount {0};
 
 	void resetPlayers();
 	void takeActions();

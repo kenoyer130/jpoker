@@ -12,6 +12,7 @@ Poker::Poker() {
 	
 	this->bigBlind = config.BigBlind;
 	this->smallBlind = config.SmallBlind;
+	this->handBlinds = config.HandBlinds;
 	
 	// set players
 	auto players = unique_ptr<Players>(new Players(config));
@@ -82,8 +83,18 @@ void Poker::StartGame() {
 
 			break;
 
-		case GameState::HandEnd:
-			// remove any players that have no chips
+		case GameState::HandEnd: {
+
+			this->handCount++;
+
+			// time to raise blinds?
+			if(this->handCount == this->handBlinds) {
+				this->handCount = 0;
+				this->smallBlind *= 2;
+				this->bigBlind *= 2;
+			}			
+
+            // remove any players that have no chips
 			for (int i = this->players->items.size() -1; i > -1 ; i--) {
 				if(this->players->items[i]->Chips < 1) {
 					this->players->remove(i);
@@ -98,6 +109,7 @@ void Poker::StartGame() {
 			}			
 			
 			break;
+		}
 			
 	  	case GameState::GameEnd:
 			jout << "Game Over!\n";
@@ -202,18 +214,17 @@ void Poker::takeActions() {
 		this->players->getBigBlind().BetAmount = this->bigBlind;
 
 		this->currentbet = this->bigBlind;
-	
+
+	    currentPlayer = this->players->nextPlayerByIndex(startingPlayer);
 	} else {
-
-		startingPlayer = this->players->Dealer;	
+		startingPlayer = this->players->nextPlayerByIndex(this->players->Dealer);
+		currentPlayer = startingPlayer;
 	}
-
-	currentPlayer = this->players->nextPlayerByIndex(startingPlayer);
 		
-	int raise{0};
+	int raise {0};
 	int checks {0};
 	
-	while(startingPlayer!=currentPlayer) {
+	do {
 
 		Player& player = this->players->get(currentPlayer);
 
@@ -239,6 +250,7 @@ void Poker::takeActions() {
 		handState.cards = cards;
 		handState.checks = checks;
 		handState.chips = player.Chips;
+		handState.bigBlind = this->bigBlind;
 		
 		auto actionTaken = player.AI->getAction(handState);
 		
@@ -273,18 +285,26 @@ void Poker::takeActions() {
 			player.Folded = true;
 			break;
 
-		case(Action::Call):
+		case(Action::Call): {
 			jout <<  player.Name << " " << " Calls.\n";
 
-			this->table->Pot += this->currentbet;
-			player.Chips -= this->currentbet;
+			int currentbet = this->currentbet;
+
+			if(currentbet > player.Chips) {
+				currentbet = player.Chips;
+			}
+			
+			this->table->Pot += currentbet;
+			player.Chips -= currentbet;
 			
 			break;
-
-	    case(Action::Check):
-			jout <<  player.Name << " " << " Checks.\n";
-			checks++;
-			break;
+		}
+			
+	    case(Action::Check): {
+			 jout <<  player.Name << " " << " Checks.\n";
+			 checks++;
+			 break;
+		   }
 		}
 
 		jout << "pause\n";
@@ -292,7 +312,8 @@ void Poker::takeActions() {
 
 		// get next player
 		currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
-	}
+		
+	} while(startingPlayer != currentPlayer);
 
 	// is our hand over?
 	handOver();
@@ -312,7 +333,7 @@ void Poker::handOver() {
 	}
 
 	// if it is the river its showdown time!
-	if(this->gameState ==  GameState::River) {
+	if(this->gameState == GameState::River) {
 
 		HandRank highRank;
 		int winningPlayer;
@@ -326,7 +347,13 @@ void Poker::handOver() {
 			Hand hand(c);
 			HandRank handRank = hand.getRanking();
 
-			jout << players->items[activePlayers[i]]->Name << " : " << RankStrings[static_cast<int>(handRank.rank)] << "\n";
+			jout << players->items[activePlayers[i]]->Name << " : " << RankStrings[static_cast<int>(handRank.rank)] << " ";
+
+			for (int j = 0; j < c.size(); j++) {
+				jout << c[j] << " ";
+			}
+
+			jout << "\n";
 			
 			if(handRank.rank > highRank.rank) {
 				highRank = handRank;

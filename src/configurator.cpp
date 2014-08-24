@@ -8,6 +8,8 @@ Configuration Configurator::Get() {
 	config.SmallBlind = 100;
 	config.BigBlind = 200;
 	config.StartingChips = 2000;
+	config.HandBlinds = 5;
+	
 	config.PlayerNames = {{"Jim", "Bob","Joe","Slack","Bot","Rick","Amy","Sara"}};
 	return config;
 }

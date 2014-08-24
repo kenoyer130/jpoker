@@ -19,6 +19,7 @@ struct HandState {
 	int raise {0};
 	int checks {0};
 	int chips {0};
+	int bigBlind {0};
 };
 
 class Hand {

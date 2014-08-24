@@ -5,9 +5,13 @@
 #include <string>
 
 struct Configuration {
-	double SmallBlind;
-	double BigBlind;
-	int StartingChips;
+
+	double SmallBlind {0.0};
+	double BigBlind {0.0};
+	int StartingChips {0};
+
+	int HandBlinds {0};
+	
 	std::vector<std::string> PlayerNames;
 };
 

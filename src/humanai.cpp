@@ -63,7 +63,7 @@ ActionTaken HumanAI::getAction(HandState handState) {
 	case 'r':
 		result.action=Action::Raise;
 	    // todo: currently hardcoded
-		result.amount = 200; 
+		result.amount = handState.bigBlind; 
 		break;
 	}
 
