@@ -1,0 +1,4 @@
+* big blind is being skipped
+* negative chips are wrapping
+* print cards at showdown
+* add split pot concept

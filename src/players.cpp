@@ -69,11 +69,9 @@ void Players::nextDealer() {
 // returns the combined ante of the small and big blind.
 // also decrements the big and small blind players chips.
 int Players::ante(int bigBlind, int smallBlind) {
-	auto bigPlayer = this->get(this->BigBlind);
-	auto smallPlayer = this->get(this->SmallBlind);
-
-	int bigante = bigPlayer.bet(bigBlind);
-	int smallante = smallPlayer.bet(smallBlind);
+	
+	int bigante = this->items[this->BigBlind]->bet(bigBlind);
+	int smallante = this->items[this->SmallBlind]->bet(smallBlind);
 
 	return bigante + smallante;
 }
