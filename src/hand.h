@@ -1,10 +1,9 @@
-// "Copyright 2014 jkenoyer"
-
 #ifndef SRC_HAND_H_
 #define SRC_HAND_H_
 
 #include <vector>
 #include "./card.h"
+#include "./hand_rank.h"
 
 using std::vector;
 
@@ -32,6 +31,8 @@ class Hand {
     vector<Card> cards;
     explicit Hand(vector<Card> cards);
     HandRank getRanking();
+
+	friend ostream& operator<<(ostream& os, const Hand& hand);
 };
 
 #endif  // SRC_HAND_H_

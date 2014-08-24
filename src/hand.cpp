@@ -14,6 +14,16 @@ Hand::Hand(vector<Card> cards) {
     this->cards = cards;
 }
 
+// stream output operator
+ostream& operator << (ostream& os, const Hand& hand)
+{	
+	for (int i = 0; i < hand.cards.size(); i++) {
+		os << hand.cards[i] << " ";
+	}
+
+	return os;
+}
+
 HandRank Hand::getRanking() {
 
     // sort cards

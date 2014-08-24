@@ -343,13 +343,7 @@ void Poker::handOver() {
 			Hand hand(c);
 			HandRank handRank = hand.getRanking();
 
-			jout << players->items[activePlayers[i]]->Name << " : " << RankStrings[static_cast<int>(handRank.rank)] << " ";
-
-			for (int j = 0; j < c.size(); j++) {
-				jout << c[j] << " ";
-			}
-
-			jout << "\n";
+			jout << players->items[activePlayers[i]]->Name << " " << handRank << " " << hand << "\n"; 
 			
 			if(handRank.rank > highRank.rank) {
 				highRank = handRank;

@@ -42,4 +42,3 @@ ostream& operator << (ostream& os, const Card& c)
 	
 	return os;
 }
-

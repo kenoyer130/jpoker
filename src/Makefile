@@ -12,6 +12,7 @@ OBJS =  \
  jout.o \
  configurator.o \
  hand.o \
+ hand_rank.o \
  humanai.o \
  stockai.o \
  card.o \
@@ -49,6 +50,7 @@ card.o: card.h
 player.o : player.h
 deck.o : deck.h
 poker.o : poker.h
+hand_rank.o : hand_rank.h
 hand_test.o: hand.o
 
 clean : 
