@@ -13,10 +13,10 @@ public:
 
 	std::unique_ptr<AI> AI;
 
-	bool Folded;
+	bool Folded {false};
 	
-    std::string Name;
-	unsigned int Chips;
+    std::string Name {""};
+	unsigned int Chips {0};
 	
 	Card HoleCard[2];
 

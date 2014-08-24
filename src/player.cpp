@@ -10,6 +10,7 @@ int Player::bet(int amount) {
 
 	this->Chips -= amount;
 	this->BetAmount += amount;
+
 	return amount;
 }
 

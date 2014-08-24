@@ -3,6 +3,8 @@
 
 ActionTaken HumanAI::getAction(HandState handState) {
 
+	jout << "player bet: " << handState.playerbet << "\n";
+	
 	// output current state
 	jout << "\n";
 	jout << "Hole cards: " <<  handState.holeCard[0] << " ";
@@ -28,7 +30,7 @@ ActionTaken HumanAI::getAction(HandState handState) {
 		jout <<	"[C]heck";
 	}	
 
-	jout <<	" (" << handState.currentbet  << ")";
+	jout <<	" (" << handState.currentbet - handState.playerbet << ")";
 	
 	jout <<	", or [R]aise:";
 

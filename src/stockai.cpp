@@ -27,6 +27,10 @@ ActionTaken StockAI::getAction(HandState handState) {
 		rank = getPreFlopDecision(hand, handState);
 
 		debug << "preflop rank: " << rank << "\n";
+	} else {
+		Hand hand(handState.cards);
+		HandRank handRank = hand.getRanking();
+		rank = static_cast<int>(handRank.rank);
 	}
 
 	// modify rank based off position
@@ -38,6 +42,9 @@ ActionTaken StockAI::getAction(HandState handState) {
 	if(handState.raise > 0) {
 		debug << "\nrank after raises " << handState.raise  << ": " << rank << "\n";
 	}
+
+	// increase for checks. avoid a check fest
+	rank += handState.checks;
    
 	debug << "final rank: " << rank << "\n";
 

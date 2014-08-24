@@ -211,6 +211,7 @@ void Poker::takeActions() {
 	currentPlayer = this->players->nextPlayerByIndex(startingPlayer);
 		
 	int raise{0};
+	int checks {0};
 	
 	while(startingPlayer!=currentPlayer) {
 
@@ -236,6 +237,7 @@ void Poker::takeActions() {
 		handState.holeCard[1] = player.HoleCard[1];
 		handState.raise = raise;
 		handState.cards = cards;
+		handState.checks = checks;
 		
 		auto actionTaken = player.AI->getAction(handState);
 
@@ -251,6 +253,8 @@ void Poker::takeActions() {
 			player.Chips -= actionTaken.amount;
 			player.BetAmount += actionTaken.amount;
 
+			checks = 0;
+			
 			// whenever someone raises we need to go back around.
 			startingPlayer = currentPlayer;
 			break;
@@ -270,6 +274,7 @@ void Poker::takeActions() {
 
 	    case(Action::Check):
 			jout <<  player.Name << " " << " Checks.\n";
+			checks++;
 			break;
 		}
 
