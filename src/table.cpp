@@ -50,7 +50,7 @@ void Table::seedDeck() {
 		}
 	}
 
-	//for(Card card:Deck) {
-	//	std::jout << card.ToString() << "\n";
+	// for(Card card:Deck) {
+	// 	jout << card << "\n";
 	// }
 }

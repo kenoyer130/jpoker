@@ -3,10 +3,6 @@
 
 ActionTaken HumanAI::getAction(HandState handState) {
 
-	// TODO: add number of remaining players
-	jout << "pot: " <<  handState.pot << " current bet:" <<  handState.currentbet;
-	jout << "\n";
-
 	// output current state
 	jout << "\n";
 	jout << "Hole cards: " <<  handState.holeCard[0] << " ";
@@ -20,18 +16,19 @@ ActionTaken HumanAI::getAction(HandState handState) {
 
 	jout << "rank: " << RankStrings[static_cast<int>(handRank.rank)] << "\n";
 
-	// can we just check?
-	bool canCheck {handState.currentbet == 0};
-		
 	// get action to take
 	bool valid{false};
 	char input;
 
-	jout << "You can either [F]old, [C]all (" << handState.currentbet  << ")";
+	jout << "You can either [F]old, ";
 
-	if (canCheck) {
-		jout << ", chec[K] ";
-	}
+	if(handState.currentbet != 0) {
+		jout << "[C]all";	
+	} else {
+		jout <<	"[C]heck";
+	}	
+
+	jout <<	" (" << handState.currentbet  << ")";
 	
 	jout <<	", or [R]aise:";
 
@@ -42,7 +39,7 @@ ActionTaken HumanAI::getAction(HandState handState) {
 		// eat endl
 		getchar();
 		
-		if(input=='f' || input=='c' || input=='r' || (canCheck && input=='k')) {
+		if(input=='f' || input=='c' || input=='r') {
 			valid=true;
 		}
 	}
@@ -54,10 +51,12 @@ ActionTaken HumanAI::getAction(HandState handState) {
 	case 'f':
 		result.action=Action::Fold;
 		break;
-	case 'k':
-		result.action=Action::Check;
 	case 'c':
-		result.action=Action::Call;
+		if(handState.currentbet != 0) {
+			result.action=Action::Call;
+		} else {
+			result.action=Action::Check;
+		}
 		break;
 	case 'r':
 		result.action=Action::Raise;

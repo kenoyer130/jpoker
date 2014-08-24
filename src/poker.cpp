@@ -41,8 +41,7 @@ void Poker::StartGame() {
 			break;
 			
 		case GameState::PreFlop:
-			jout << "Preflop\n";
-
+		
 			takeActions();
 
 			if(gameState!=GameState::HandEnd) {
@@ -52,8 +51,7 @@ void Poker::StartGame() {
 			break;
 
 		case GameState::Flop:
-			jout << "Flop\n";
-
+		
 			dealCards(3);
 
 			takeActions();
@@ -65,8 +63,7 @@ void Poker::StartGame() {
 			break;
 
 		case GameState::Turn:
-			jout << "Turn\n";
-
+		
 			dealCards(1);
 
 			takeActions();
@@ -78,8 +75,7 @@ void Poker::StartGame() {
 			break;
 
 		case GameState::River:
-			jout << "River\n";
-
+		
 			dealCards(1);
 
 			takeActions();
@@ -138,9 +134,11 @@ void Poker::dealCards(int number) {
 }
 
 void Poker::printState() {
+
+	this->clearScreen();
+
+	jout << GameStateStrings[static_cast<int>(this->gameState)] << "\n";
 	
-	jout << "\nPot: " << this->table->Pot << "\n";
-		
 	for(int i = 0; i <  this->players->items.size(); i++) {
 
 		if(this->players->items[i]->Folded) continue;
@@ -166,6 +164,9 @@ void Poker::printState() {
 		jout << "\n";
 	}
 	
+	jout << "Pot: " << this->table->Pot << " ";
+	jout << "Bet: " << this->currentbet << "\n";
+	
 	jout << "cards: ";
 
 	for (int i=0; i<this->cards.size(); i++) {
@@ -188,10 +189,6 @@ void Poker::takeActions() {
 	resetPlayers();
 	
 	this->currentbet = 0;
-	
-	printState();
-	
-	jout << "starting betting round!\n";
 	
 	int startingPlayer {0};
 	int currentPlayer {0};
@@ -224,8 +221,10 @@ void Poker::takeActions() {
 			continue;
 		}
 
-		jout << "player " << player.Name << " going!" << "\n";		
+		jout << "player " << player.Name << " going!" << "\n";
 
+		printState();
+	
 		HandState handState;
 		
 		handState.gameState = this->gameState;
@@ -346,5 +345,11 @@ void Poker::playerWon(int index) {
 	jout << " chips: " << this->players->items[index]->Chips << "\n\n";
 
 	getchar();
-	getchar();
+}
+
+void Poker::clearScreen() {
+	int n;
+    for (n = 0; n < 10; n++) {
+		printf( "\n\n\n\n\n\n\n\n\n\n" );
+	}
 }

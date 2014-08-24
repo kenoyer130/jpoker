@@ -31,6 +31,7 @@ private:
 	void dealCards(int number);
 	void handOver();
 	void playerWon(int playerIndex);
+	void clearScreen();
 	
 };
 

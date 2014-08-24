@@ -17,25 +17,23 @@ ostream& operator << (ostream& os, const Card& c)
 	std::string value;
 	
 	if(c.number<10) {
-		value += std::to_string(c.number + 2);
+		value += std::to_string(c.number + 1);
 	} else {
 		switch(c.number){
 		case 10:
-			value += "Jack";
+			value += "J";
 			break;
 		case 11:
-			value += "Queen";
+			value += "Q";
 			break;
 		case 12:
-			value += "King";
+			value += "K";
 			break;
 		case 13:
-			value += "Ace";
+			value += "A";
 			break;
 		}
 	}
-
-	value += " of ";
 
 	int val = static_cast<int>(c.suite);
 	value += SuiteStrings[val];

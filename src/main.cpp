@@ -5,8 +5,6 @@
 #include "poker.h"
 
 int main(int argc, char **argv) {
-
-	
 	
 	// set debug mode
 	if (argc > 1) {
