@@ -58,7 +58,13 @@ Player& Players::getSmallBlind() {
 // moves the dealer button to the next player on the left
 // also resets the big and little blinds.
 void Players::nextDealer() {
-	// set next dealer
+	
+	// if the previous dealer was removed set it to the first player
+	if(this->Dealer > (this->items.size() -1)) {
+		this->Dealer = 0;
+	}
+
+    // set next dealer
 	this->Dealer = next(get(this->Dealer));
 	
 	// set the blinds
