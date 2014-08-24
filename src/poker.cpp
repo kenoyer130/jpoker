@@ -238,26 +238,35 @@ void Poker::takeActions() {
 		handState.raise = raise;
 		handState.cards = cards;
 		handState.checks = checks;
+		handState.chips = player.Chips;
 		
 		auto actionTaken = player.AI->getAction(handState);
-
+		
 		switch(actionTaken.action) {
-			
-		case(Action::Raise):
+			// note the use of {} to limit scope	
+		case(Action::Raise): {
 			jout <<  player.Name << " " << " Raises " << actionTaken.amount << "\n";
 			raise++;
 
-			this->table->Pot += actionTaken.amount + this->currentbet;
-			this->currentbet += actionTaken.amount;
+			int amount = actionTaken.amount;
+			
+			// can't bet more then you put in
+			if( amount > player.Chips) {
+				amount = player.Chips;
+			}
+			
+			this->table->Pot += amount + this->currentbet;
+			this->currentbet += amount;
 
-			player.Chips -= actionTaken.amount;
-			player.BetAmount += actionTaken.amount;
+			player.Chips -= amount;
+			player.BetAmount += amount;
 
 			checks = 0;
 			
 			// whenever someone raises we need to go back around.
 			startingPlayer = currentPlayer;
 			break;
+		}
 		  
 		case(Action::Fold):
 			jout <<  player.Name << " " << " Folds.\n";

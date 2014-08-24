@@ -17,7 +17,8 @@ struct HandState {
 	Card holeCard[2];
 	vector<Card> cards;
 	int raise {0};
-	int checks {0};	
+	int checks {0};
+	int chips {0};
 };
 
 class Hand {
