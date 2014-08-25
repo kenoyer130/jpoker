@@ -2,6 +2,16 @@
 #include "jout.h"
 
 #include <cmath>
+#include <random>
+
+StockAI::StockAI() {
+	
+	std::default_random_engine generator(std::random_device{}());
+	std::uniform_int_distribution<int> distribution(0, 4);
+
+	// scale is -2 to 2 where -2 is conservative and 2 is aggressive.
+	this->playStyle = (distribution(generator) - 2);
+}
 
 ActionTaken StockAI::getAction(HandState handState) {
   	
@@ -43,6 +53,9 @@ ActionTaken StockAI::getAction(HandState handState) {
 		debug << "\nrank after raises " << handState.raise  << ": " << rank << "\n";
 	}
 
+	// apply play style
+	rank += this->playStyle;
+	
 	// increase for checks. avoid a check fest
 	rank += handState.checks;
    

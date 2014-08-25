@@ -11,7 +11,14 @@ using std::cout;
 // standard ai
 class StockAI : public AI {
 
+private:
+
+	// adds variance to play styles
+	int playStyle;
+	
 public:
+
+	StockAI();
 	
 	ActionTaken getAction(HandState handState);
 
