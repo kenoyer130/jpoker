@@ -362,8 +362,6 @@ void Poker::handOver() {
 			//todo deal with ties
 		}
 
-		jout << players->items[winningPlayer]->Name << " : " << RankStrings[static_cast<int>(highRank.rank)] << "\n";
-
 		playerWon(activePlayers[winningPlayer]);
 	}
 }
