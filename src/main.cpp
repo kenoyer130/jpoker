@@ -6,10 +6,16 @@
 
 int main(int argc, char **argv) {
 	
-	// set debug mode
-	if (argc > 1) {
-		if(strncmp(argv[1], "-d", 2) == 0) {
+	bool autoMode {false};
+
+	for (int i = 0; i < argc; i++) {
+
+		if(strncmp(argv[i], "-d", 2) == 0) {
 			Debug::DebugEnabled = 1;
+		}
+
+		if(strncmp(argv[i], "-a", 2) == 0) {
+			autoMode = true;
 		}
 	}
 	
@@ -18,6 +24,6 @@ int main(int argc, char **argv) {
 	out.init();
 
 	// start game!
-	Poker poker;
+	Poker poker(autoMode);
 	poker.StartGame();
 }

@@ -8,11 +8,15 @@
 
 using std::remove_if;
 
-Poker::Poker() {
+Poker::Poker(bool automode) {
+
+	this->autoMode = automode;
 
     // load config
 	Configurator configurator;
 	Configuration config = configurator.Get();
+
+	config.AutoMode = autoMode;
 	
 	this->bigBlind = config.BigBlind;
 	this->smallBlind = config.SmallBlind;
@@ -308,8 +312,10 @@ void Poker::takeActions() {
 		   }
 		}
 
-		jout << "pause\n";
-		getchar();
+		if(!this->autoMode) {
+			jout << "pause\n";
+			getchar();
+		}
 
 		// get next player
 		currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
@@ -383,7 +389,9 @@ void Poker::playerWon(int index) {
 	jout << " winnings: " << this->Pot;
 	jout << " chips: " << this->players->items[index]->chips.get() << "\n\n";
 
-	getchar();
+	if(!this->autoMode) {
+		getchar();
+	}
 }
 
 void Poker::clearScreen() {

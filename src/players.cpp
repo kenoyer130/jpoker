@@ -8,18 +8,20 @@
 // constructor
 
 Players::Players(Configuration config) {
+
+	if(!config.AutoMode) {
+		// first player is human for faster lookup.
+		std::unique_ptr<Player> human(new Player());
+
+		human->chips.set(config.StartingChips);
+		human->Name = "You";
+
+		std::unique_ptr<HumanAI> human_ai(new HumanAI());
+		human->AI = std::move(human_ai);
 	
-	// first player is human for faster lookup.
-	std::unique_ptr<Player> human(new Player());
-
-	human->chips.set(config.StartingChips);
-	human->Name = "You";
-
-	std::unique_ptr<HumanAI> human_ai(new HumanAI());
-	human->AI = std::move(human_ai);
+		this->items.push_back(std::move(human));
+	}
 	
-	this->items.push_back(std::move(human));
-
 	// seed other players
 	for(int i=0;i < config.PlayerNames.size(); i++){
 

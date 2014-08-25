@@ -11,6 +11,8 @@ struct Configuration {
 	int StartingChips {0};
 
 	int HandBlinds {0};
+
+	bool AutoMode {false};
 	
 	std::vector<std::string> PlayerNames;
 };

@@ -8,11 +8,13 @@ using namespace std;
 
 class Poker {
 public:
-	Poker();
+	Poker(bool automode);
 	void StartGame();
 
 private:
 
+	bool autoMode {false};
+		
 	Deck deck {};
 	
 	std::unique_ptr<Players> players;
