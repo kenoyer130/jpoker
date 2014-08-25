@@ -1,4 +1,5 @@
 #include <string>
+#include <cassert>
 
 #include "card.h"
 
@@ -15,6 +16,8 @@ Card::Card(int number, Suite suite) {
 ostream& operator << (ostream& os, const Card& c)
 {	
 	std::string value;
+
+	assert (c.number != 0);
 	
 	if(c.number<10) {
 		value += std::to_string(c.number + 1);
