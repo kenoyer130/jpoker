@@ -236,6 +236,12 @@ void Poker::takeActions() {
 			continue;
 		}
 
+		if(player.chips.get() == 0) {
+			jout << player.Name << " is ALL IN!\n";
+			currentPlayer = this->players->nextPlayerByIndex(currentPlayer);
+			continue;
+		}
+
 		jout << "player " << player.Name << " going!" << "\n";
 
 		printState();
@@ -254,6 +260,7 @@ void Poker::takeActions() {
 		handState.checks = checks;
 		handState.chips = player.chips.get();
 		handState.bigBlind = this->bigBlind;
+
 		
 		auto actionTaken = player.AI->getAction(handState);
 		
@@ -366,10 +373,15 @@ void Poker::playerWon(int index) {
 	jout << this->players->items[index]->Name << " won!\n";
 	
 	this->gameState = GameState::HandEnd;
+		
+	jout << "winner: " << this->players->items[index]->Name << "\n";
+
+	if(this->players->items[index]->chips.get() == 0) {
+		jout << "WAS ALL IN!!\n";
+	}
 
 	this->players->items[index]->chips.add(this->Pot);
-	
-	jout << this->players->items[index]->Name;
+
 	jout << " winnings: " << this->Pot;
 	jout << " chips: " << this->players->items[index]->chips.get() << "\n\n";
 
