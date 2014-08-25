@@ -4,6 +4,10 @@
 #include "deck.h"
 #include "jout.h"
 
+#include <algorithm>
+
+using std::remove_if;
+
 Poker::Poker() {
 
     // load config
@@ -88,15 +92,14 @@ void Poker::StartGame() {
 				this->handCount = 0;
 				this->smallBlind *= 2;
 				this->bigBlind *= 2;
-			}			
-
-            // remove any players that have no chips
-			for (int i = this->players->items.size() -1; i > -1 ; i--) {
-				if(this->players->items[i]->Chips < 1) {
-					this->players->remove(i);
-				}
 			}
 
+			// remove any players that have no chips
+			this->players->items.erase(std::remove_if(this->players->items.begin(), this->players->items.end(), [](unique_ptr<Player> const& player)
+													 {														 
+														 return player->chips.get() <= 0;
+													 }), this->players->items.end());
+			
 			// if no more players the game is over!
 			if(this->players->items.size() > 1) {
 				this->gameState = GameState::HandStart;	
@@ -107,11 +110,15 @@ void Poker::StartGame() {
 			break;
 		}
 			
-	  	case GameState::GameEnd:
-			jout << "Game Over!\n";
+	  	case GameState::GameEnd: {
+			// will be handled when loop exits
 			break;
+		   }
 		}
 	}
+
+	jout << "Game over!\n" << this->players->items[0]->
+		Name << " Won the tournament!\n\n";
 }
 
 void Poker::resetPlayers(){
@@ -153,7 +160,7 @@ void Poker::printState() {
 
 		jout << "Player: " <<  this->players->items[i]->Name << "\t\t\t";
 
-		jout <<  this->players->items[i]->Chips << "\t";
+		jout <<  this->players->items[i]->chips.get() << "\t";
 
 		jout <<  this->players->items[i]->BetAmount << "\t";
 		
@@ -245,7 +252,7 @@ void Poker::takeActions() {
 		handState.raise = raise;
 		handState.cards = cards;
 		handState.checks = checks;
-		handState.chips = player.Chips;
+		handState.chips = player.chips.get();
 		handState.bigBlind = this->bigBlind;
 		
 		auto actionTaken = player.AI->getAction(handState);
@@ -253,22 +260,18 @@ void Poker::takeActions() {
 		switch(actionTaken.action) {
 			// note the use of {} to limit scope	
 		case(Action::Raise): {
-			jout <<  player.Name << " " << " Raises " << actionTaken.amount << "\n";
+
 			raise++;
 
-			int amount = actionTaken.amount;
-			
-			// can't bet more then you put in
-			if( amount > player.Chips) {
-				amount = player.Chips;
-			}
-			
+			int amount = player.chips.bet(actionTaken.amount);
+						
 			this->Pot += amount + this->currentbet;
 			this->currentbet += amount;
 
-			player.Chips -= amount;
 			player.BetAmount += amount;
 
+			jout <<  player.Name << " " << " Raises " << amount << "\n";
+			
 			checks = 0;
 			
 			// whenever someone raises we need to go back around.
@@ -284,14 +287,9 @@ void Poker::takeActions() {
 		case(Action::Call): {
 			jout <<  player.Name << " " << " Calls.\n";
 
-			int currentbet = this->currentbet;
-
-			if(currentbet > player.Chips) {
-				currentbet = player.Chips;
-			}
+			int currentbet = player.chips.bet(this->currentbet);
 			
 			this->Pot += currentbet;
-			player.Chips -= currentbet;
 			
 			break;
 		}
@@ -369,11 +367,11 @@ void Poker::playerWon(int index) {
 	
 	this->gameState = GameState::HandEnd;
 
-	this->players->items[index]->Chips += this->Pot;
+	this->players->items[index]->chips.add(this->Pot);
 	
 	jout << this->players->items[index]->Name;
 	jout << " winnings: " << this->Pot;
-	jout << " chips: " << this->players->items[index]->Chips << "\n\n";
+	jout << " chips: " << this->players->items[index]->chips.get() << "\n\n";
 
 	getchar();
 }

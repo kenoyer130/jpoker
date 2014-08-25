@@ -12,7 +12,7 @@ Players::Players(Configuration config) {
 	// first player is human for faster lookup.
 	std::unique_ptr<Player> human(new Player());
 
-	human->Chips = config.StartingChips;
+	human->chips.set(config.StartingChips);
 	human->Name = "You";
 
 	std::unique_ptr<HumanAI> human_ai(new HumanAI());
@@ -24,7 +24,7 @@ Players::Players(Configuration config) {
 	for(int i=0;i < config.PlayerNames.size(); i++){
 
 		std::unique_ptr<Player> player(new Player());
-		player->Chips = config.StartingChips;
+		player->chips.set(config.StartingChips);
 		player->Name = config.PlayerNames[i];
 
 		std::unique_ptr<StockAI> stock_ai(new StockAI());
@@ -76,8 +76,8 @@ void Players::nextDealer() {
 // also decrements the big and small blind players chips.
 int Players::ante(int bigBlind, int smallBlind) {
 	
-	int bigante = this->items[this->BigBlind]->bet(bigBlind);
-	int smallante = this->items[this->SmallBlind]->bet(smallBlind);
+	int bigante = this->items[this->BigBlind]->chips.bet(bigBlind);
+	int smallante = this->items[this->SmallBlind]->chips.bet(smallBlind);
 
 	return bigante + smallante;
 }

@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 
+#include "chips.h"
 #include "card.h"
 #include "ai.h"
 
@@ -16,15 +17,12 @@ public:
 	bool Folded {false};
 	
     std::string Name {""};
-	unsigned int Chips {0};
+
+	Chips chips;
 	
 	Card HoleCard[2];
 
 	int BetAmount{0};
-
-	// subtracts the bet and sets the bet amount.
-	// if the bet is more then chips then returns all chips
-	int bet(int amount);
 
 	Player(){}
 
@@ -32,7 +30,7 @@ public:
 		 : AI(other.AI->clone()),
 		Folded(other.Folded),
 		Name(other.Name),
-		Chips(other.Chips),
+		chips(other.chips),
 		BetAmount(other.BetAmount)
 	{
 		this->HoleCard[0]=other.HoleCard[0];
@@ -44,7 +42,7 @@ public:
 		//this->AI(other.AI->clone());
 		this->Folded = other.Folded;
 		this->Name = other.Name;
-		this->Chips = other.Chips;
+		this->chips = other.chips;
 		this->BetAmount = other.BetAmount;
 
 		this->HoleCard[0]=other.HoleCard[0];
